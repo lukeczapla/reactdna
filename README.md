@@ -1,70 +1,17 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# reactdna - Movie animation visualizer for modes of motion of DNA bases, phosphates and base-pair step regions (136 x 30, or 4080 movies per model), from data extracted from the RCSB Protein Databank and from 10 microsecond simulations of a library of DNA sequences with AMBER parmbsc1.
 
-## Available Scripts
+Using WebGL, it animates the motions of DNA as expressed by eigenvectors of the inverse covariance matrix for a subset of 30 coordinates representing the state of the central junction of a DNA tetramer duplex (e.g., ATAG representing 5'-ATAG-3' paired with 5'-CTAT-3'), for a set of 136 non-redundant/unique tetramers (out of 256), and displays the means, eigenvectors (normalized), and eigenvalues (effective rigidity) and plots variations over the set.  Computes persistence length, and also allows perturbing the 3D structure along eigenvectors (outputting PDB files compatible with pymol, UCSF Chimera, VMD and other 3D visualization software programs), and reports parameters in Curves+ and 3DNA coordinate systems.
 
-In the project directory, you can run:
+Requires React, three, numeric, plotly.js, and react-plotly.js installed with npm for node, and the input files (30x30 covariance matrices and 1x30 row vector of mean values for dimeric or tetrameric sequences), and the browser should be WebGL enabled for the 3D rendering of movies live in the browser.
 
-### `yarn start`
+Persistence length worker thread requires two packages installed:
+```bash
+npm install react-app-rewired worker-loader --save-dev
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The build folder contains the entire package (with start page index.html) for deployment on a web server or locally with "Load File", there is no compilation required.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+![Screenshot](https://github.com/lukeczapla/reactDNAvis/blob/master/ReactDNAVis.png?raw=true)
 
-### `yarn test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
