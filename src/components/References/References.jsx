@@ -334,6 +334,38 @@ export function complement(s, rna = false) {
     return result;
 }
 
+export function complementTetramer(s, rna = false) {
+  let result = "";
+  if (s.charAt(3) === 'C') result = "G";
+    if (s.charAt(3) === 'T' || s.charAt(1) === 'U') result = "A";
+    if (s.charAt(3) === 'G')  result = "C";
+    if (s.charAt(3) === 'A') {
+      if (rna === false) result = "T"; else result = 'U';
+    }
+    if (s.charAt(2) === 'C')  result += "G";
+    if (s.charAt(2) === 'T' || s.charAt(0) === 'U') result += "A";
+    if (s.charAt(2) === 'G')  result += "C";
+    if (s.charAt(2) === 'A') {
+        if (rna === false) result += "T";
+        else result += "U";
+    }
+    if (s.charAt(1) === 'C')  result += "G";
+    if (s.charAt(1) === 'T' || s.charAt(0) === 'U') result += "A";
+    if (s.charAt(1) === 'G')  result += "C";
+    if (s.charAt(1) === 'A') {
+        if (rna === false) result += "T";
+        else result += "U";
+    }
+    if (s.charAt(0) === 'C')  result += "G";
+    if (s.charAt(0) === 'T' || s.charAt(0) === 'U') result += "A";
+    if (s.charAt(0) === 'G')  result += "C";
+    if (s.charAt(0) === 'A') {
+        if (rna === false) result += "T";
+        else result += "U";
+    }
+    return result;
+}
+
 // copy 2D array
 function clone(vec) {
 	let result = [];
