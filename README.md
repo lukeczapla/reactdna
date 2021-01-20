@@ -1,5 +1,6 @@
 
-# reactdna - Movie animation visualizer for modes of motion of DNA bases, phosphates and base-pair step regions (136 x 30, or 4080 movies per model), from data extracted from the RCSB Protein Databank and from 10 microsecond simulations of a library of DNA sequences with AMBER parmbsc1.
+# reactdna - Movie animation visualizer for DNA 
+Animates modes of motion of DNA bases, phosphates and base-pair step regions (136 x 30, or 4080 movies per model), from data extracted from the RCSB Protein Databank and from 10 microsecond simulations of a library of DNA sequences with AMBER parmbsc1.
 
 Using WebGL, it animates the motions of DNA as expressed by eigenvectors of the inverse covariance matrix for a subset of 30 coordinates representing the state of the central junction of a DNA tetramer duplex (e.g., ATAG representing 5'-ATAG-3' paired with 5'-CTAT-3'), for a set of 136 non-redundant/unique tetramers (out of 256), and displays the means, eigenvectors (normalized), and eigenvalues (effective rigidity) and plots variations over the set.  Computes persistence length, and also allows perturbing the 3D structure along eigenvectors (outputting PDB files compatible with pymol, UCSF Chimera, VMD and other 3D visualization software programs), and reports parameters in Curves+ and 3DNA coordinate systems.
 
