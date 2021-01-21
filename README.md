@@ -13,6 +13,6 @@ npm install react-app-rewired worker-loader --save-dev
 
 The build folder contains the entire package (with start page index.html) for deployment on a web server or locally with "Load File", there is no compilation required.
 
-![Screenshot](https://github.com/lukeczapla/reactDNAvis/blob/master/ReactDNAVis.png?raw=true)
+![Screenshot](https://github.com/lukeczapla/reactdna/blob/master/Website.png?raw=true)
 
 
