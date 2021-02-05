@@ -59,6 +59,7 @@ class TetramerReader extends React.Component {
       let lines = text.split("\n");
       let sumTwist = 0;
       let sumTwist2 = 0;
+      let sumTilt = 0, sumTilt2 = 0, sumRoll = 0, sumRoll2 = 0;
       lines.forEach(line => {
         let litems = line.split(" ");
         if (litems.length < 31) return;
@@ -70,15 +71,22 @@ class TetramerReader extends React.Component {
         
         if (ref.complementTetramer(litems[0]) === litems[0]) sumTwist += steps[14]*11.4591559*ref.scale(steps[12], steps[13], steps[14]);
         else sumTwist += 2*steps[14]*11.4591559*ref.scale(steps[12], steps[13], steps[14]);
-        
-        let points = ref.get30Coordinates(steps, litems[0], true);
-	    let PhoW = ref.getAtomSets().atoms[1][1];
-	    let PhoC = ref.getAtomSets().atoms[4][1];
-		ref3.getBasePlanes(ref.getAtomSets());
+        if (ref.complementTetramer(litems[0]) === litems[0]) sumTilt += Math.abs(steps[12])*11.4591559*ref.scale(steps[12], steps[13], steps[14]);
+        else sumTilt += 2*Math.abs(steps[12])*11.4591559*ref.scale(steps[12], steps[13], steps[14]);        
+        if (ref.complementTetramer(litems[0]) === litems[0]) sumRoll += Math.abs(steps[13])*11.4591559*ref.scale(steps[12], steps[13], steps[14]);
+        else sumRoll += 2*Math.abs(steps[13])*11.4591559*ref.scale(steps[12], steps[13], steps[14]);
+	let points = ref.get30Coordinates(steps, litems[0], true);
+	let PhoW = ref.getAtomSets().atoms[1][1];
+	let PhoC = ref.getAtomSets().atoms[4][1];
+        ref3.getBasePlanes(ref.getAtomSets());
         let stepParameters = ref3.getParameters();
 
         if (ref.complementTetramer(litems[0]) === litems[0]) sumTwist2 += stepParameters[1][2];
         else sumTwist2 += 2*stepParameters[1][2];
+        if (ref.complementTetramer(litems[0]) === litems[0]) sumTilt2 += Math.abs(stepParameters[1][0]);
+        else sumTilt2 += 2*Math.abs(stepParameters[1][0]);
+        if (ref.complementTetramer(litems[0]) === litems[0]) sumRoll2 += Math.abs(stepParameters[1][1]);
+        else sumRoll2 += 2*Math.abs(stepParameters[1][1]);
 
 		let midframe = ref.getMidFrame();
 		let px = PhoW.x - midframe[0][3];
@@ -97,11 +105,13 @@ class TetramerReader extends React.Component {
 			px*midframe[0][1]+py*midframe[1][1]+pz*midframe[2][1],
 			px*midframe[0][2]+py*midframe[1][2]+pz*midframe[2][2]
 		];
-		let dataItem = [litems[0], stepParameters[1][2], pw[0], pw[1], pw[2], pc[0], pc[1], pc[2], steps[14]*11.4591559*ref.scale(steps[12],steps[13],steps[14]), steps[12]*11.4591559*ref.scale(steps[12],steps[13],steps[14]), steps[13]*11.4591559*ref.scale(steps[12],steps[13],steps[14])];
-        dataSet.push(dataItem);
+		let dataItem = [litems[0], stepParameters[1][2], pw[0], pw[1], pw[2], pc[0], pc[1], pc[2], steps[14]*11.4591559*ref.scale(steps[12],steps[13],steps[14]), steps[12]*11.4591559*ref.scale(steps[12],steps[13],steps[14]), steps[13]*11.4591559*ref.scale(steps[12],steps[13],steps[14]), stepParameters[1][0], stepParameters[1][1], stepParameters[1][3], stepParameters[1][4], stepParameters[1][5]];
+	        dataSet.push(dataItem);
       });
       console.log(set[0] + " twist = " + sumTwist/256.0);
       console.log(set[0] + " twist 3DNA = " + sumTwist2/256.0);
+      console.log(set[0] + " average |tilt|: " + sumTilt/256 + " and 3DNA " + sumTilt2/256);
+      console.log(set[0] + " average |roll| " + sumRoll/256 + " and 3DNA " + sumRoll2/256);
       //console.log(JSON.stringify(dataSet));
       currentAnalysis[index] = dataSet;
 	  count++;
@@ -303,7 +313,10 @@ class TetramerReader extends React.Component {
   		"py2": "yp of Crick phosphate (Å)",
   		"pz": "zp of Watson phosphate (Å)",
   		"pz2": "zp of Crick phosphate (Å)",
-  		"persistence": "Persistence length of repeat (Å)"
+  		"persistence": "Persistence length of repeat (Å)",
+  		"slide": "Slide (Å)",
+  		"shift": "Shift (Å)",
+  		"rise": "Rise (Å)"
   	}
   	if (this.state.check1) useData[0] = true;
   	if (this.state.check2) useData[1] = true;
@@ -339,12 +352,16 @@ class TetramerReader extends React.Component {
   					yvalues.push(value[9]);
   					if (value[9] > max) max = value[9];
   					if (value[9] < min) min = value[9];
+					xvalues.push(value[0]);
+					yvalues.push(value[11]);
   				}
   				else if (this.state.plotItem === "roll") {
   					yvalues.push(value[10]);
   					if (value[10] > max) max = value[10];
   					if (value[10] < min) min = value[10];
-  				}
+  					xvalues.push(value[0]);
+					yvalues.push(value[12]);
+				}
   				else if (this.state.plotItem === "twist") {
   					yvalues.push(value[1]);
   					if (value[1] > max) max = value[1];
@@ -353,6 +370,21 @@ class TetramerReader extends React.Component {
   					yvalues.push(value[8]);
   					if (Math.abs(value[8]-value[1]) > max_diff) max_diff = Math.abs(value[8] - value[1]);
   				}
+                                else if (this.state.plotItem === "shift") {
+                                        yvalues.push(value[13]);
+                                        if (value[13] > max) max = value[13];
+                                        if (value[13] < min) min = value[13];
+                                }
+                                else if (this.state.plotItem === "slide") {
+                                        yvalues.push(value[14]);
+                                        if (value[14] > max) max = value[14];
+                                        if (value[14] < min) min = value[14];
+                                }
+                                else if (this.state.plotItem === "rise") {
+                                        yvalues.push(value[15]);
+                                        if (value[15] > max) max = value[15];
+                                        if (value[15] < min) min = value[15];
+                                }
   				else if (this.state.plotItem === "px") {
   					yvalues.push(value[2]);
   					if (value[2] > max) max = value[2];
@@ -459,7 +491,10 @@ class TetramerReader extends React.Component {
     	  	<option id="pz2" value="pz2" key="7">Phosphate zp (Crick)</option>
     	  	<option id="tilt" value="tilt" key="8">Tilt</option>
     	  	<option id="roll" value="roll" key="9">Roll</option>
-    	  	<option id="S" value="S" key="10">S (config. volume)</option>
+                <option id="shift" value="shift" key="10">Shift</option>
+		<option id="slide" value="slide" key="11">Slide</option>
+		<option id="rise" value="rise" key="12">Rise</option>  
+		<option id="S" value="S" key="10">S (config. volume)</option>
     	  	<option id="persistence" value="persistence" key="persistence">Persistence Length</option>
     	  </select><button onClick={this.makePlot}>Create Plot!</button></> : null}
     	  {this.state.layout ? <Plot layout={this.state.layout} data={this.state.data} /> : null} <button onClick={this.clearData}>Clear Data and Plots</button>

@@ -1,5 +1,6 @@
 import numeric from 'numeric';
 import * as ref from '../References/References.jsx';
+import * as ref3 from '../References/References3DNA.jsx';
 
 let data = [];
 
@@ -25,7 +26,30 @@ function persistenceLength() {
 	  let step = numeric.add(numeric.transpose(numeric.dot(eigen.eigenvectors, numeric.transpose(v))), step0);
 	  //console.log(step);
 	  for (let i = 0; i < 30; i++) coord[i] = step[0][i];
-	  ref.get30Coordinates(coord, data.tetramer);
+	  ref.get30Coordinates(coord, data.tetramer, true);
+	  // start new code
+	  let PhoW = ref.getAtomSets().atoms[1][1];
+	  let PhoC = ref.getAtomSets().atoms[4][1];
+      ref3.getBasePlanes(ref.getAtomSets());
+      let stepParameters = ref3.getParameters();
+	  let midframe = ref.getMidFrame();
+	  let px = PhoW.x - midframe[0][3];
+	  let py = PhoW.y - midframe[1][3];
+	  let pz = PhoW.z - midframe[2][3];
+	  let pw = [
+		px*midframe[0][0]+py*midframe[1][0]+pz*midframe[2][0],
+		px*midframe[0][1]+py*midframe[1][1]+pz*midframe[2][1],
+		px*midframe[0][2]+py*midframe[1][2]+pz*midframe[2][2]
+	  ];
+	  px = PhoC.x - midframe[0][3];
+	  py = PhoC.y - midframe[1][3];
+	  pz = PhoC.z - midframe[2][3];	
+	  let pc = [
+		px*midframe[0][0]+py*midframe[1][0]+pz*midframe[2][0],
+		px*midframe[0][1]+py*midframe[1][1]+pz*midframe[2][1],
+		px*midframe[0][2]+py*midframe[1][2]+pz*midframe[2][2]
+	  ];
+	  // end new code  
 	  let bpstep = ref.getStep();
 	  A = numeric.add(A, bpstep);
 	}
