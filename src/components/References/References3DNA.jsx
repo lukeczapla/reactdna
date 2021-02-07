@@ -507,7 +507,7 @@ export function getBasePlanes(x) {
 	
 	// we average the base rotations and then find the best fitting 3x3 Q matrix
 	//   by doing the SVD of this and calculating U*V_transpose
-// TO-DO: Uncomment this!
+// TO DO - UNCOMMENT
 /*	temp = numeric.add(temp, ref2);
 	temp = numeric.mul(0.5, temp);
 	let test = [[temp[0][0], temp[0][1], temp[0][2]], [temp[1][0], temp[1][1], temp[1][2]], [temp[2][0], temp[2][1], temp[2][2]]];
@@ -516,8 +516,8 @@ export function getBasePlanes(x) {
 
     temp[0][0] = Q[0][0]; temp[1][0] = Q[1][0]; temp[2][0] = Q[2][0];
 	temp[0][1] = Q[0][1]; temp[1][1] = Q[1][1]; temp[2][1] = Q[2][1];
-	temp[0][2] = Q[0][2]; temp[1][2] = Q[1][2]; temp[2][2] = Q[2][2];
-*/
+	temp[0][2] = Q[0][2]; temp[1][2] = Q[1][2]; temp[2][2] = Q[2][2];*/
+
 
 	let pairingParameters = calculatetp(numeric.dot(numeric.inv(ref2), temp2));
 	//console.log("Pairing Parameters:");
@@ -548,9 +548,8 @@ export function getBasePlanes(x) {
 	}
 	
 	// average and find the best fit with SVD(average) and then Q = U*V_transpose
-// TO-DO UNCOMMENT THIS
-/*
-	temp = numeric.add(temp, ref2);
+// TO-DO UNCOMMENT
+/*	temp = numeric.add(temp, ref2);
 	temp = numeric.mul(0.5, temp);
 	test = [[temp[0][0], temp[0][1], temp[0][2]], [temp[1][0], temp[1][1], temp[1][2]], [temp[2][0], temp[2][1], temp[2][2]]];
 	testsvd = numeric.svd(test);
@@ -558,8 +557,8 @@ export function getBasePlanes(x) {
 
     temp[0][0] = Q[0][0]; temp[1][0] = Q[1][0]; temp[2][0] = Q[2][0];
 	temp[0][1] = Q[0][1]; temp[1][1] = Q[1][1]; temp[2][1] = Q[2][1];
-	temp[0][2] = Q[0][2]; temp[1][2] = Q[1][2]; temp[2][2] = Q[2][2];
-*/
+	temp[0][2] = Q[0][2]; temp[1][2] = Q[1][2]; temp[2][2] = Q[2][2];*/
+
 	pairingParameters = calculatetp(numeric.dot(numeric.inv(ref2), temp2));
 	Mtest = calculateM(pairingParameters);
 	//console.log(JSON.stringify(temp));

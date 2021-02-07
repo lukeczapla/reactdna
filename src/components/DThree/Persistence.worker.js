@@ -19,6 +19,36 @@ function createBinZ(bin) {
   return result;
 }
 
+function binRoll(roll, bin) {
+    if (roll > 10) console.log(roll);
+    roll += 20;
+    roll *= 5;
+    bin[parseInt(roll)]++;
+}
+
+function createBinRoll(bin) {
+  let result = [];
+  for (let i = 0; i < 200; i++) {
+    result.push([(i-100)/5.0+0.1, bin[i]])
+  }
+  return result;
+}
+
+function binSlide(slide, bin) {
+    if (slide < -2.0) console.log("SLIDE: " + slide);
+    slide += 4;
+    slide *= 10;
+    bin[parseInt(slide)]++;
+}
+
+function createBinSlide(bin) {
+  let result = [];
+  for (let i = 0; i < 80; i++) {
+    result.push([(i-40)/10.0+0.05, bin[i]]);
+  }
+  return result;
+}
+
 function persistenceLength() {
 	let cov = data.cov;
 	let F = numeric.inv(cov);
@@ -38,13 +68,22 @@ function persistenceLength() {
 	// start new code (histograms)
     let watson = [];
     let crick = [];
+    let binRoll1 = [];
+    let binSlide1 = [];
     let binWZ = [];
     let binCZ = [];
+    binRoll1.length = 200;
     binWZ.length = 100;
     binCZ.length = 100;
+    binSlide1.length = 80;
     for (let i = 0; i < 100; i++) {
       binCZ[i] = 0;
       binWZ[i] = 0;
+      binRoll1[i] = 0;
+      if (i < 80) binSlide1[i] = 0;
+    }
+    for (let i = 100; i < 200; i++) {
+      binRoll1[i] = 0;
     }
 	// end new code
 	for (let i = 0; i < parseInt(data.numSamples); i++) {
@@ -56,8 +95,8 @@ function persistenceLength() {
 	  // start new code
 	  let PhoW = ref.getAtomSets().atoms[1][1];
 	  let PhoC = ref.getAtomSets().atoms[4][1];
-          ref3.getBasePlanes(ref.getAtomSets());
-          let stepParameters = ref3.getParameters();
+      ref3.getBasePlanes(ref.getAtomSets());
+      let stepParameters = ref3.getParameters();
 	  let midframe = ref.getMidFrame();
 	  let px = PhoW.x - midframe[0][3];
 	  let py = PhoW.y - midframe[1][3];
@@ -77,7 +116,9 @@ function persistenceLength() {
 	  ];
 	  binZ(pw[2], binWZ);
 	  binZ(pc[2], binCZ);
-	  //watson.push(pw);
+	  binRoll(stepParameters[1][1], binRoll1);
+	  binSlide(stepParameters[1][4], binSlide1);
+	  watson.push(pw);
 	  //crick.push(pc);
 	  // end new code  
 	  let bpstep = ref.getStep();
@@ -89,11 +130,13 @@ function persistenceLength() {
 	}
 	let watsonBinZ = createBinZ(binWZ);
 	let crickBinZ = createBinZ(binCZ);
+	let BinRoll = createBinRoll(binRoll1);
+	let BinSlide = createBinSlide(binSlide1);
 	console.log(JSON.stringify(createBinZ(binWZ)));
 	console.log(JSON.stringify(createBinZ(binCZ)));
-	//console.log(watson);
+	console.log(watson);
 	console.log(A[0][3] + " " + A[1][3]);
-	return [A[2][3], watsonBinZ, crickBinZ];
+	return [A[2][3], watsonBinZ, crickBinZ, BinRoll, BinSlide];
 
 }
 
