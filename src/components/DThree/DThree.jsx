@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import PersistenceWorker from './Persistence.worker';
 import * as trois from 'three';
 import numeric from 'numeric';
+import Plot from 'react-plotly.js';
 import Eigenvector from './Eigenvector.jsx';
 import * as ref from '../References/References.jsx';
 import * as ref3 from '../References/References3DNA.jsx';
@@ -36,6 +37,7 @@ class DThree extends Component {
       eigenvectors: [],
       eigenlist: [],
       processing: false,
+      showPlot: false,
       pdbText: ''
     };
     this.scene = null;
@@ -51,13 +53,139 @@ class DThree extends Component {
     });
   };
 
+  makePlots = (P) => {
+        let watson = P[1];
+        let crick = P[2];
+        let data1 = [];
+        let data2 = [];
+        let xvalues = [];
+        let yvalues = [];
+        let xvalues2 = [];
+        let yvalues2 = [];
+        let max = 0;
+        let max2 = 0;
+        for (let i = 0; i < P[1].length; i++) {
+            xvalues.push(watson[i][0]);
+            yvalues.push(watson[i][1]);
+            if (watson[i][1] > max) max = watson[i][1];
+            xvalues2.push(crick[i][0]);
+            yvalues2.push(crick[i][1]);
+            if (crick[i][1] > max2) max2 = crick[i][1];
+        }
+        data1.push({
+            x: xvalues,
+            y: yvalues,
+            name: this.state.tetramer,
+            type: 'bar',
+            mode: 'markers',
+            marker: {
+                size: 5,
+                line: {
+                    width: 2
+                }
+            }
+        });
+        data2.push({
+            x: xvalues2,
+            y: yvalues2,
+            name: this.state.tetramer,
+            type: 'bar',
+            mode: 'markers',
+            marker: {
+                size: 5,
+                line: {
+                    width: 2
+                }
+            }
+        });
+        let dtick1 = 10;
+        let dtick2 = 10;
+        if (max > 200) dtick1 = 50; if (max > 500) dtick1 = 100; if (max > 2000) dtick1 = 500;
+        if (max > 5000) dtick1 = 1000; if (max > 20000) dtick1 = 5000; if (max > 50000) dtick1 = 10000;
+        if (max2 > 200) dtick2 = 50; if (max2 > 500) dtick2 = 100; if (max2 > 2000) dtick2 = 500;
+        if (max2 > 5000) dtick2 = 1000; if (max2 > 20000) dtick2 = 5000; if (max2 > 50000) dtick2 = 10000;
+
+      	this.setState({
+      	        showPlot: true,
+      	        data1: data1,
+                layout1: {
+                  title: "zp values of Watson Phosphate",
+                  width: 1080,
+                  height: 800,
+                  margin: {
+                    b: 150
+                  },
+                  font: {
+                    size: 18
+                  },
+    	          xaxis: {
+                    range: [-5, 5],
+                    //autorange: 'reversed',
+                    showgrid: true,
+                    showline: true,
+                    gridwidth: 2,
+                    gridcolor: '#777777',
+                    title: 'zp value (Å)',
+                    automargin: true,
+                    linewidth: 1
+                  },
+                  yaxis: {
+                    range: [0, max+5],
+                    showgrid: true,
+                    showline: true,
+                    dtick: dtick1,
+                    gridwidth: 2,
+                    gridcolor: '#777777',
+                    title: "number of samples",
+                    linewidth: 1
+                  }
+    			},
+    			data2: data2,
+                layout2: {
+                  title: "zp values of Crick Phosphate",
+                  width: 1080,
+                  height: 800,
+                  margin: {
+                    b: 150
+                  },
+                  font: {
+                    size: 18
+                  },
+                  xaxis: {
+                    range: [-5, 5],
+                    //autorange: 'reversed',
+                    showgrid: true,
+                    showline: true,
+                    gridwidth: 2,
+                    gridcolor: '#777777',
+                    //title: 'number of days before today',
+                    automargin: true,
+                    title: "zp value (Å)",
+                    linewidth: 1
+                  },
+                  yaxis: {
+                    range: [0, max2+5],
+                    showgrid: true,
+                    showline: true,
+                    dtick: dtick2,
+                    gridwidth: 2,
+                    gridcolor: '#777777',
+                    title: "number of samples",
+                    linewidth: 1
+                  }
+                }
+    	});
+
+  }
+
   persistenceLength = () => {
     this.setState({processing: true});
     let worker = new PersistenceWorker();
     worker.postMessage(this.state);
     worker.addEventListener("message", (e) => {
     	let P = e.data;
-    	alert("Persistence length in Angstroms: " + P);
+    	alert("Persistence length in Angstroms: " + P[0]);
+    	this.makePlots(P);
     	this.setState({processing: false});
     });
 /*  // blocking (non-webworker, non-threaded) version:
@@ -318,8 +446,9 @@ class DThree extends Component {
     return (<>
     	<div className="data-window">
     Number of Gaussian samples<input type="number" step="1" value={this.state.numSamples} name="numSamples" onChange={this.inputChanged}/><button disabled={this.state.processing} onClick={this.persistenceLength}>Calculate Persistence Length</button><br/>
-	<b>Mean state:</b><input type="checkbox" name="showIC" checked={this.state.showIC} onChange={this.inputChanged}/>Show original internal (rad/5) form<table><tbody>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{(value[0]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0], value[1], value[2]))).toFixed(5)}</td><td>{(value[1]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0], value[1], value[2]))).toFixed(5)}</td><td>{(value[2]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[1], value[2], value[3]))).toFixed(5)}</td><td>{value[3]}</td><td>{(value[4]).toFixed(5)}</td><td>{(value[5]).toFixed(5)}</td></tr>))}</tbody></table>
-	<b>Phosphates:</b><table><thead style={{border: "0 none"}}><tr><td></td><td>x_p</td><td>y_p</td><td>z_p</td></tr></thead><tbody><tr><td>watson</td><td>{this.state.phoW[0].toFixed(5)}</td><td>{this.state.phoW[1].toFixed(5)}</td><td>{this.state.phoW[2].toFixed(5)}</td></tr><tr><td>crick</td><td>{this.state.phoC[0].toFixed(5)}</td><td>{this.state.phoC[1].toFixed(5)}</td><td>{this.state.phoC[2].toFixed(5)}</td></tr></tbody></table>
+    {this.state.showPlot ? <><Plot layout={this.state.layout1} data={this.state.data1} /><br/><Plot layout={this.state.layout2} data={this.state.data2} /><br/></> : null}
+	<b>Mean state:</b><input type="checkbox" name="showIC" checked={this.state.showIC} onChange={this.inputChanged}/>Show original internal (rad/5) form<table><tbody><tr><td><b>PARAM</b></td><td>rot1 (°)</td><td>rot2 (°)</td><td>rot3 (°)</td><td>trans1 (Å)</td><td>trans2 (Å)</td><td>trans3 (Å)</td></tr>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{(value[0]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0], value[1], value[2]))).toFixed(5)}</td><td>{(value[1]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0], value[1], value[2]))).toFixed(5)}</td><td>{(value[2]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[1], value[2], value[3]))).toFixed(5)}</td><td>{value[3]}</td><td>{(value[4]).toFixed(5)}</td><td>{(value[5]).toFixed(5)}</td></tr>))}</tbody></table>
+	<b>Phosphates:</b><table><thead style={{border: "0 none"}}><tr><td></td><td>xp (Å)</td><td>yp (Å)</td><td>zp (Å)</td></tr></thead><tbody><tr><td>watson</td><td>{this.state.phoW[0].toFixed(5)}</td><td>{this.state.phoW[1].toFixed(5)}</td><td>{this.state.phoW[2].toFixed(5)}</td></tr><tr><td>crick</td><td>{this.state.phoC[0].toFixed(5)}</td><td>{this.state.phoC[1].toFixed(5)}</td><td>{this.state.phoC[2].toFixed(5)}</td></tr></tbody></table>
 	{this.state.eigenvalues.length > 0 ? <><select value={this.state.modeNum} name="modeNum" onChange={this.inputChanged}>
         {this.state.eigenlist.map((value) => (
             <option key={value.value} value={value.index}>{value.index + ": eigenvalue: " + value.value}</option>
@@ -327,7 +456,7 @@ class DThree extends Component {
         : null}
 	<div style={{border: "solid", margin: "auto", width:"600px", height: "600px", justifyContent: "center", textAlign: "center"}} ref={ref => (this.mount = ref)}></div>
 	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}<br/><br/>
-	  	<b>3DNA state:</b><table><tbody>{this.state.parameters3.map((value,index) => (<tr><td>{val3titles[index]}</td><td>{value[0].toFixed(5)}</td><td>{value[1].toFixed(5)}</td><td>{value[2].toFixed(5)}</td><td>{value[3].toFixed(5)}</td><td>{value[4].toFixed(5)}</td><td>{value[5].toFixed(5)}</td></tr>))}</tbody></table><br/><br/>
+	  	<b>3DNA state:</b><table><tbody><tr><td><b>PARAM</b></td><td>rot1 (°)</td><td>rot2 (°)</td><td>rot3 (°)</td><td>trans1 (Å)</td><td>trans2 (Å)</td><td>trans3 (Å)</td></tr>{this.state.parameters3.map((value,index) => (<tr><td>{val3titles[index]}</td><td>{value[0].toFixed(5)}</td><td>{value[1].toFixed(5)}</td><td>{value[2].toFixed(5)}</td><td>{value[3].toFixed(5)}</td><td>{value[4].toFixed(5)}</td><td>{value[5].toFixed(5)}</td></tr>))}</tbody></table><br/><br/>
 	  <u><b>PDB text file</b></u>
 	  <pre>{this.state.pdbText}</pre><br/>
 	  </div>
