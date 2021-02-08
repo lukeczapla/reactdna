@@ -61,16 +61,30 @@ function createBinY(bin, crick = false) {
   return result;
 }
 
+function binTwist(twist, bin) {
+    twist -= 15;
+    twist *= 2.5;
+    bin[parseInt(twist)]++;
+}
+
+function createBinTwist(bin) {
+  let result = [];
+  for (let i = 0; i < 100; i++) {
+    result.push([i/2.5 + 15 + 0.200, bin[i]]);
+  }
+  return result;
+}
+
 function binRoll(roll, bin) {
-    roll += 20;
-    roll *= 5;
+    roll += 25;
+    roll *= 2.0;
     bin[parseInt(roll)]++;
 }
 
 function createBinRoll(bin) {
   let result = [];
-  for (let i = 0; i < 200; i++) {
-    result.push([(i-100)/5.0+0.1, bin[i]])
+  for (let i = 0; i < 100; i++) {
+    result.push([(i-50)/2.0+0.250, bin[i]])
   }
   return result;
 }
@@ -110,12 +124,14 @@ function persistenceLength() {
     let watson = [];
     let crick = [];
     let binRoll1 = [];
+    let binTwist1 = [];
     let binSlide1 = [];
     let binWZ = [];
     let binCZ = [];
     let binWX = [];
     let binWY = [];
-    binRoll1.length = 200;
+    binRoll1.length = 100;
+    binTwist1.length = 100;
     binWZ.length = 100;
     binCZ.length = 100;
     binSlide1.length = 80;
@@ -125,12 +141,10 @@ function persistenceLength() {
       binCZ[i] = 0;
       binWZ[i] = 0;
       binRoll1[i] = 0;
+      binTwist1[i] = 0;
       if (i < 60) binWY[i] = 0;
       if (i < 60) binWX[i] = 0;
       if (i < 80) binSlide1[i] = 0;
-    }
-    for (let i = 100; i < 200; i++) {
-      binRoll1[i] = 0;
     }
 	// end new code
 	for (let i = 0; i < parseInt(data.numSamples); i++) {
@@ -166,6 +180,7 @@ function persistenceLength() {
 	  binY(pw[1], binWY);
 	  binZ(pc[2], binCZ);
 	  binRoll(stepParameters[1][1], binRoll1);
+	  binTwist(stepParameters[1][2], binTwist1);
 	  binSlide(stepParameters[1][4], binSlide1);
 	  watson.push(pw);
 	  //crick.push(pc);
@@ -182,13 +197,13 @@ function persistenceLength() {
 	let watsonBinX = createBinX(binWX);
 	let watsonBinY = createBinY(binWY);
 	let BinRoll = createBinRoll(binRoll1);
+	let BinTwist = createBinTwist(binTwist1);
 	let BinSlide = createBinSlide(binSlide1);
 	console.log(JSON.stringify(createBinZ(binWZ)));
 	console.log(JSON.stringify(createBinZ(binCZ)));
 	console.log(watson);
 	console.log(A[0][3] + " " + A[1][3]);
-	return [A[2][3], watsonBinZ, crickBinZ, BinRoll, BinSlide, watsonBinX, watsonBinY];
-
+	return [A[2][3], watsonBinZ, crickBinZ, BinRoll, BinSlide, watsonBinX, watsonBinY, BinTwist];
 }
 
 onmessage = (e) => {
