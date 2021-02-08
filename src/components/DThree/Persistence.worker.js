@@ -121,8 +121,8 @@ function persistenceLength() {
 	let coord = [];
 	coord.length = 30;
 	// start new code (histograms)
-    let watson = [];
-    let crick = [];
+//    let watson = [];
+//    let crick = [];
     let binRoll1 = [];
     let binTwist1 = [];
     let binSlide1 = [];
@@ -182,7 +182,7 @@ function persistenceLength() {
 	  binRoll(stepParameters[1][1], binRoll1);
 	  binTwist(stepParameters[1][2], binTwist1);
 	  binSlide(stepParameters[1][4], binSlide1);
-	  watson.push(pw);
+//	  watson.push(pw);
 	  //crick.push(pc);
 	  // end new code  
 	  let bpstep = ref.getStep();
@@ -201,8 +201,8 @@ function persistenceLength() {
 	let BinSlide = createBinSlide(binSlide1);
 	console.log(JSON.stringify(createBinZ(binWZ)));
 	console.log(JSON.stringify(createBinZ(binCZ)));
-	console.log(watson);
-	console.log(A[0][3] + " " + A[1][3]);
+//	console.log(watson);
+	console.log("remainder: " + A[0][3] + " " + A[1][3]);
 	return [A[2][3], watsonBinZ, crickBinZ, BinRoll, BinSlide, watsonBinX, watsonBinY, BinTwist];
 }
 
