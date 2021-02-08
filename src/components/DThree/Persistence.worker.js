@@ -19,8 +19,49 @@ function createBinZ(bin) {
   return result;
 }
 
+function binX(px, bin, crick = false) {
+  if (px > -1.5) console.log("significant watson px (Å) = " + px);
+  if (!crick) {
+    px += 6.0;
+    px *= 10;
+    bin[parseInt(px)]++;
+  } else {
+    px *= 10;
+    bin[parseInt(px)]++;
+  }
+}
+
+function createBinX(bin, crick = false) {
+  let result = [];
+  for (let i = 0; i < 60; i++) {
+    if (!crick) result.push([(i-60)/10.0 + 0.05, bin[i]]);
+    else result.push([i/10.0 + 0.05, bin[i]]);
+  }
+  return result;
+}
+
+function binY(py, bin, crick = false) {
+  if (!crick) {
+    py -= 6;
+    py *= 10;
+    bin[parseInt(py)]++;
+  } else {
+    py += 12;
+    py *= 10;
+    bin[parseInt(py)]++;
+  }
+}
+
+function createBinY(bin, crick = false) {
+  let result = [];
+  for (let i = 0; i < 60; i++) {
+    if (!crick) result.push([i/10.0 + 6 + 0.05, bin[i]]);
+    else result.push([(i/10) - 12 + 0.05, bin[i]]);
+  }
+  return result;
+}
+
 function binRoll(roll, bin) {
-    if (roll > 10) console.log(roll);
     roll += 20;
     roll *= 5;
     bin[parseInt(roll)]++;
@@ -72,14 +113,20 @@ function persistenceLength() {
     let binSlide1 = [];
     let binWZ = [];
     let binCZ = [];
+    let binWX = [];
+    let binWY = [];
     binRoll1.length = 200;
     binWZ.length = 100;
     binCZ.length = 100;
     binSlide1.length = 80;
+    binWX.length = 60;
+    binWY.length = 60;
     for (let i = 0; i < 100; i++) {
       binCZ[i] = 0;
       binWZ[i] = 0;
       binRoll1[i] = 0;
+      if (i < 60) binWY[i] = 0;
+      if (i < 60) binWX[i] = 0;
       if (i < 80) binSlide1[i] = 0;
     }
     for (let i = 100; i < 200; i++) {
@@ -115,6 +162,8 @@ function persistenceLength() {
 		px*midframe[0][2]+py*midframe[1][2]+pz*midframe[2][2]
 	  ];
 	  binZ(pw[2], binWZ);
+	  binX(pw[0], binWX);
+	  binY(pw[1], binWY);
 	  binZ(pc[2], binCZ);
 	  binRoll(stepParameters[1][1], binRoll1);
 	  binSlide(stepParameters[1][4], binSlide1);
@@ -130,13 +179,15 @@ function persistenceLength() {
 	}
 	let watsonBinZ = createBinZ(binWZ);
 	let crickBinZ = createBinZ(binCZ);
+	let watsonBinX = createBinX(binWX);
+	let watsonBinY = createBinY(binWY);
 	let BinRoll = createBinRoll(binRoll1);
 	let BinSlide = createBinSlide(binSlide1);
 	console.log(JSON.stringify(createBinZ(binWZ)));
 	console.log(JSON.stringify(createBinZ(binCZ)));
 	console.log(watson);
 	console.log(A[0][3] + " " + A[1][3]);
-	return [A[2][3], watsonBinZ, crickBinZ, BinRoll, BinSlide];
+	return [A[2][3], watsonBinZ, crickBinZ, BinRoll, BinSlide, watsonBinX, watsonBinY];
 
 }
 

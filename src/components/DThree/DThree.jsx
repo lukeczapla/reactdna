@@ -58,19 +58,16 @@ class DThree extends Component {
         let crick = P[2];
         let roll = P[3];
         let slide = P[4];
-        let data1 = []; let data2 = []; let data3 = []; let data4 = [];
-        let xvalues = [];
-        let yvalues = [];
-        let xvalues2 = [];
-        let yvalues2 = [];
-        let xvalues3 = [];
-        let yvalues3 = [];
-        let xvalues4 = [];
-        let yvalues4 = [];
-        let max = 0;
-        let max2 = 0;
-        let max3 = 0;
-        let max4 = 0;
+        let watsonX = P[5];
+        let watsonY = P[6];
+        let data1 = []; let data2 = []; let data3 = []; let data4 = []; let data5 = []; let data6 = [];
+        let xvalues = []; let yvalues = [];
+        let xvalues2 = []; let yvalues2 = [];
+        let xvalues3 = []; let yvalues3 = [];
+        let xvalues4 = []; let yvalues4 = [];
+        let xvalues5 = []; let yvalues5 = [];
+        let xvalues6 = []; let yvalues6 = [];
+        let max = 0; let max2 = 0; let max3 = 0; let max4 = 0; let max5 = 0; let max6 = 0;
         for (let i = 0; i < P[1].length; i++) {
             xvalues.push(watson[i][0]);
             yvalues.push(watson[i][1]);
@@ -88,6 +85,16 @@ class DThree extends Component {
             xvalues4.push(slide[i][0]);
             yvalues4.push(slide[i][1]);
             if (slide[i][1] > max4) max4 = slide[i][1];
+        }
+        for (let i = 0; i < P[5].length; i++) {
+            xvalues5.push(watsonX[i][0]);
+            yvalues5.push(watsonX[i][1]);
+            if (watsonX[i][1] > max5) max5 = watsonX[i][1];
+        }
+        for (let i = 0; i < P[6].length; i++) {
+            xvalues6.push(watsonY[i][0]);
+            yvalues6.push(watsonY[i][1]);
+            if (watsonY[i][1] > max6) max6 = watsonY[i][1];
         }
         data1.push({
             x: xvalues,
@@ -145,10 +152,35 @@ class DThree extends Component {
                 }
             }
         });
-        let dtick1 = 10;
-        let dtick2 = 10;
-        let dtick3 = 10;
-        let dtick4 = 10;
+        data5.push({
+            x: xvalues5,
+            y: yvalues5,
+            name: this.state.tetramer,
+            type: 'bar',
+            mode: 'markers',
+            marker: {
+                symbol: 'square',
+                size: 5,
+                line: {
+                    width: 2
+                }
+            }
+        });
+        data6.push({
+            x: xvalues6,
+            y: yvalues6,
+            name: this.state.tetramer,
+            type: 'bar',
+            mode: 'markers',
+            marker: {
+                symbol: 'square',
+                size: 5,
+                line: {
+                    width: 2
+                }
+            }
+        });
+        let dtick1 = 10; let dtick2 = 10; let dtick3 = 10; let dtick4 = 10; let dtick5 = 10; let dtick6 = 10;
         if (max > 200) dtick1 = 50; if (max > 500) dtick1 = 100; if (max > 2000) dtick1 = 500;
         if (max > 5000) dtick1 = 1000; if (max > 20000) dtick1 = 5000; if (max > 50000) dtick1 = 10000;
         if (max2 > 200) dtick2 = 50; if (max2 > 500) dtick2 = 100; if (max2 > 2000) dtick2 = 500;
@@ -157,6 +189,10 @@ class DThree extends Component {
         if (max3 > 5000) dtick3 = 1000; if (max3 > 20000) dtick3 = 5000; if (max3 > 50000) dtick3 = 10000;
         if (max4 > 200) dtick4 = 50; if (max4 > 500) dtick4 = 100; if (max4 > 2000) dtick4 = 500;
         if (max4 > 5000) dtick4 = 1000; if (max4 > 20000) dtick4 = 5000; if (max4 > 50000) dtick4 = 10000;
+        if (max5 > 200) dtick5 = 50; if (max5 > 500) dtick5 = 100; if (max5 > 2000) dtick5 = 500;
+        if (max5 > 5000) dtick5 = 1000; if (max5 > 20000) dtick5 = 5000; if (max5 > 50000) dtick5 = 10000;
+        if (max6 > 200) dtick6 = 50; if (max6 > 500) dtick6 = 100; if (max6 > 2000) dtick6 = 500;
+        if (max6 > 5000) dtick6 = 1000; if (max6 > 20000) dtick6 = 5000; if (max6 > 50000) dtick6 = 10000;
 
       	this.setState({
       	        showPlot: true,
@@ -295,7 +331,74 @@ class DThree extends Component {
                     linewidth: 1
                   }
                 },
-
+                data5: data5,
+                layout5: {
+                  title: "xp values of Watson phosphate",
+                  width: 1080,
+                  height: 800,
+                  margin: {
+                    b: 150
+                  },
+                  font: {
+                    size: 18
+                  },
+                  xaxis: {
+                    range: [-6, 0],
+                    //autorange: 'reversed',
+                    showgrid: true,
+                    showline: true,
+                    gridwidth: 2,
+                    gridcolor: '#777777',
+                    //title: 'number of days before today',
+                    automargin: true,
+                    title: "xp value (Å)",
+                    linewidth: 1
+                  },
+                  yaxis: {
+                    range: [0, max5+5],
+                    showgrid: true,
+                    showline: true,
+                    dtick: dtick5,
+                    gridwidth: 2,
+                    gridcolor: '#777777',
+                    title: "number of samples",
+                    linewidth: 1
+                  }
+                },
+                data6: data6,
+                layout6: {
+                  title: "yp values of Watson phosphate",
+                  width: 1080,
+                  height: 800,
+                  margin: {
+                    b: 150
+                  },
+                  font: {
+                    size: 18
+                  },
+                  xaxis: {
+                    range: [6, 12],
+                    //autorange: 'reversed',
+                    showgrid: true,
+                    showline: true,
+                    gridwidth: 2,
+                    gridcolor: '#777777',
+                    //title: 'number of days before today',
+                    automargin: true,
+                    title: "yp value (Å)",
+                    linewidth: 1
+                  },
+                  yaxis: {
+                    range: [0, max6+5],
+                    showgrid: true,
+                    showline: true,
+                    dtick: dtick6,
+                    gridwidth: 2,
+                    gridcolor: '#777777',
+                    title: "number of samples",
+                    linewidth: 1
+                  }
+                }
     	});
 
   }
@@ -569,7 +672,7 @@ class DThree extends Component {
     return (<>
     	<div className="data-window">
     Number of Gaussian samples<input type="number" step="1" value={this.state.numSamples} name="numSamples" onChange={this.inputChanged}/><button disabled={this.state.processing} onClick={this.persistenceLength}>Calculate Persistence Length</button><br/>
-    {this.state.showPlot ? <><Plot layout={this.state.layout1} data={this.state.data1} /><br/><Plot layout={this.state.layout2} data={this.state.data2} /><br/><Plot layout={this.state.layout3} data={this.state.data3} /><br/><Plot layout={this.state.layout4} data={this.state.data4} /><br/></> : null}
+    {this.state.showPlot ? <><Plot layout={this.state.layout1} data={this.state.data1} /><br/><Plot layout={this.state.layout5} data={this.state.data5} /><br/><Plot layout={this.state.layout6} data={this.state.data6} /><br/><Plot layout={this.state.layout2} data={this.state.data2} /><br/><Plot layout={this.state.layout3} data={this.state.data3} /><br/><Plot layout={this.state.layout4} data={this.state.data4} /><br/></> : null}
 	<b>Mean state:</b><input type="checkbox" name="showIC" checked={this.state.showIC} onChange={this.inputChanged}/>Show original internal (rad/5) form<table><tbody><tr><td><b>PARAM</b></td><td>rot1 (°)</td><td>rot2 (°)</td><td>rot3 (°)</td><td>trans1 (Å)</td><td>trans2 (Å)</td><td>trans3 (Å)</td></tr>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{(value[0]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0], value[1], value[2]))).toFixed(5)}</td><td>{(value[1]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0], value[1], value[2]))).toFixed(5)}</td><td>{(value[2]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[1], value[2], value[3]))).toFixed(5)}</td><td>{value[3]}</td><td>{(value[4]).toFixed(5)}</td><td>{(value[5]).toFixed(5)}</td></tr>))}</tbody></table>
 	<b>Phosphates:</b><table><thead style={{border: "0 none"}}><tr><td></td><td>xp (Å)</td><td>yp (Å)</td><td>zp (Å)</td></tr></thead><tbody><tr><td>watson</td><td>{this.state.phoW[0].toFixed(5)}</td><td>{this.state.phoW[1].toFixed(5)}</td><td>{this.state.phoW[2].toFixed(5)}</td></tr><tr><td>crick</td><td>{this.state.phoC[0].toFixed(5)}</td><td>{this.state.phoC[1].toFixed(5)}</td><td>{this.state.phoC[2].toFixed(5)}</td></tr></tbody></table>
 	{this.state.eigenvalues.length > 0 ? <><select value={this.state.modeNum} name="modeNum" onChange={this.inputChanged}>
