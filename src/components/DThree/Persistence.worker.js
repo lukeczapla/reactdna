@@ -120,9 +120,9 @@ function persistenceLength() {
 	v[0].length = 30;
 	let coord = [];
 	coord.length = 30;
-	// start new code (histograms)
-//    let watson = [];
-//    let crick = [];
+	//***start new code (histograms)
+    //let watson = [];
+    //let crick = [];
     let binRoll1 = [];
     let binTwist1 = [];
     let binSlide1 = [];
@@ -146,14 +146,14 @@ function persistenceLength() {
       if (i < 60) binWX[i] = 0;
       if (i < 80) binSlide1[i] = 0;
     }
-	// end new code
+	//***end new code
 	for (let i = 0; i < parseInt(data.numSamples); i++) {
 	  for (let i = 0; i < 30; i++) v[0][i] = factor[0][i]*ref.randg();
 	  let step = numeric.add(numeric.transpose(numeric.dot(eigen.eigenvectors, numeric.transpose(v))), step0);
 	  //console.log(step);
 	  for (let i = 0; i < 30; i++) coord[i] = step[0][i];
 	  ref.get30Coordinates(coord, data.tetramer, true);
-	  // start new code
+	  //***start new code
 	  let PhoW = ref.getAtomSets().atoms[1][1];
 	  let PhoC = ref.getAtomSets().atoms[4][1];
       ref3.getBasePlanes(ref.getAtomSets());
@@ -182,9 +182,9 @@ function persistenceLength() {
 	  binRoll(stepParameters[1][1], binRoll1);
 	  binTwist(stepParameters[1][2], binTwist1);
 	  binSlide(stepParameters[1][4], binSlide1);
-//	  watson.push(pw);
+      //watson.push(pw);
 	  //crick.push(pc);
-	  // end new code  
+	  //***end new code
 	  let bpstep = ref.getStep();
 	  A = numeric.add(A, bpstep);
 	}
@@ -201,15 +201,12 @@ function persistenceLength() {
 	let BinSlide = createBinSlide(binSlide1);
 	console.log(JSON.stringify(createBinZ(binWZ)));
 	console.log(JSON.stringify(createBinZ(binCZ)));
-//	console.log(watson);
 	console.log("remainder: " + A[0][3] + " " + A[1][3]);
 	return [A[2][3], watsonBinZ, crickBinZ, BinRoll, BinSlide, watsonBinX, watsonBinY, BinTwist];
 }
 
 onmessage = (e) => {
 	data = e.data;
-	//console.log(data);
-	//console.log("calculating");
 	let P = persistenceLength();
 	postMessage(P);
 }

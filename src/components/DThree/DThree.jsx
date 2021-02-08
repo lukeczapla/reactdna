@@ -241,7 +241,7 @@ class DThree extends Component {
                     linewidth: 1
                   },
                   yaxis: {
-                    range: [0, max+5],
+                    range: [0, max+10],
                     showgrid: true,
                     showline: true,
                     dtick: dtick1,
@@ -275,7 +275,7 @@ class DThree extends Component {
                     linewidth: 1
                   },
                   yaxis: {
-                    range: [0, max2+5],
+                    range: [0, max2+10],
                     showgrid: true,
                     showline: true,
                     dtick: dtick2,
@@ -298,12 +298,10 @@ class DThree extends Component {
                   },
                   xaxis: {
                     range: [-25, 25],
-                    //autorange: 'reversed',
                     showgrid: true,
                     showline: true,
                     gridwidth: 2,
                     gridcolor: '#777777',
-                    //title: 'number of days before today',
                     automargin: true,
                     title: "roll value (degrees)",
                     linewidth: 1
@@ -332,12 +330,10 @@ class DThree extends Component {
                   },
                   xaxis: {
                     range: [-4, 4],
-                    //autorange: 'reversed',
                     showgrid: true,
                     showline: true,
                     gridwidth: 2,
                     gridcolor: '#777777',
-                    //title: 'number of days before today',
                     automargin: true,
                     title: "slide value (Å)",
                     linewidth: 1

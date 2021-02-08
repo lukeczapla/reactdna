@@ -24,7 +24,7 @@ function persistenceLengthAll() {
 		let coord = [];
 		coord.length = 30;
 
-		for (let i = 0; i < 20000; i++) {
+		for (let i = 0; i < 50000; i++) {
 		  for (let i = 0; i < 30; i++) v[0][i] = factor[0][i]*ref.randg();
 		  let step = numeric.add(numeric.transpose(numeric.dot(eigen.eigenvectors, numeric.transpose(v))), step0);
 		  //console.log(step);
@@ -33,7 +33,7 @@ function persistenceLengthAll() {
 		  let bpstep = ref.getStep();
 		  A = numeric.add(A, bpstep);
 		}
-		A = numeric.mul(1/20000, A);
+		A = numeric.mul(1/50000, A);
 		for (let i = 0; i < 2000; i++) {
 		  A = numeric.dot(A, A);
 		}
@@ -47,7 +47,6 @@ function persistenceLengthAll() {
 onmessage = (e) => {
 	data = e.data;
 	console.log(data);
-	//console.log("calculating");
 	let P = persistenceLengthAll();
 	postMessage(P);
 }
