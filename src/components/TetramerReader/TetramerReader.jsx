@@ -13,6 +13,7 @@ class TetramerReader extends React.Component {
     super(props);
     this.state = {
       loaded: "",
+      tetramerText: "",
       selected: "1",
       tetramer: "",
       mean: {},
@@ -218,10 +219,29 @@ class TetramerReader extends React.Component {
 
 
   inputChanged = (e) => {
-    const value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+    let value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+    if (e.target.name === "tetramerText") {
+      if (value.length > 4) value = value.slice(0,4);
+	  value = value.toUpperCase();
+	  if (this.state.mean[value] !== undefined) {
+	  	this.setState({
+	  	  tetramer: value
+	  	});
+	  	this.engage();
+	  } else if (this.state.mean[ref.complementTetramer(value)] !== undefined) {
+	  	value = ref.complementTetramer(value);
+	  	this.setState({
+	  	  tetramer: value
+	  	});
+	  	this.engage();	  	
+	  }
+    }
     this.setState({
       [e.target.name]: value
     });
+    if (e.target.name === "tetramerText") {
+    	
+    }
     if (e.target.name === "tetramer") this.engage();
   };
 
@@ -286,11 +306,13 @@ class TetramerReader extends React.Component {
       });
       this.setState({
         tetramer: itemsT[0],
+        tetramerText: "",
         items: itemsT,
         covariance: covarianceT,
         mean: meanT,
         loaded: field
       }, () => this.forceUpdate());
+      this.engage();
       console.log(meanT);
       console.log(covarianceT);
       console.log(itemsT);
@@ -513,7 +535,7 @@ class TetramerReader extends React.Component {
               <option key={name} value={name}>{name}</option>
             )) : null}
           </select>
-          <button onClick={this.engage}>Run</button>
+          <input type="text" value={this.state.tetramerText} onChange={this.inputChanged} name="tetramerText" size="4"/>
           {this.state.engaged ? <DThree mean={this.state.mean[this.state.tetramer]} cov={this.state.covariance[this.state.tetramer]} tetramer={this.state.tetramer}/> : null}
           {this.state.engaged ? <><br/>Sequence: <input type="text" name="sequence" value={this.state.sequence} onChange={this.inputChanged}/>
     	  <button onClick={this.meanTwist}>Calculate Twist</button>

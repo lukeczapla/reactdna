@@ -61,7 +61,8 @@ class DThree extends Component {
         let watsonX = P[5];
         let watsonY = P[6];
         let twist = P[7];
-        let data1 = []; let data2 = []; let data3 = []; let data4 = []; let data5 = []; let data6 = []; let data7 = [];
+        let tilt = P[8];
+        let data1 = []; let data2 = []; let data3 = []; let data4 = []; let data5 = []; let data6 = []; let data7 = []; let data8 = [];
         let xvalues = []; let yvalues = [];
         let xvalues2 = []; let yvalues2 = [];
         let xvalues3 = []; let yvalues3 = [];
@@ -69,7 +70,8 @@ class DThree extends Component {
         let xvalues5 = []; let yvalues5 = [];
         let xvalues6 = []; let yvalues6 = [];
         let xvalues7 = []; let yvalues7 = [];
-        let max = 0; let max2 = 0; let max3 = 0; let max4 = 0; let max5 = 0; let max6 = 0; let max7 = 0;
+        let xvalues8 = []; let yvalues8 = [];        
+        let max = 0; let max2 = 0; let max3 = 0; let max4 = 0; let max5 = 0; let max6 = 0; let max7 = 0; let max8 = 0;
         for (let i = 0; i < P[1].length; i++) {
             xvalues.push(watson[i][0]);
             yvalues.push(watson[i][1]);
@@ -102,6 +104,11 @@ class DThree extends Component {
             xvalues7.push(twist[i][0]);
             yvalues7.push(twist[i][1]);
             if (twist[i][1] > max7) max7 = twist[i][1];
+        }
+        for (let i = 0; i < P[8].length; i++) {
+        	xvalues8.push(tilt[i][0]);
+        	yvalues8.push(tilt[i][1]);
+			if (tilt[i][1] > max8) max8 = tilt[i][1];
         }
         data1.push({
             x: xvalues,
@@ -201,7 +208,21 @@ class DThree extends Component {
                 }
             }
         });
-        let dtick1 = 10; let dtick2 = 10; let dtick3 = 10; let dtick4 = 10; let dtick5 = 10; let dtick6 = 10; let dtick7 = 10;
+        data8.push({
+            x: xvalues8,
+            y: yvalues8,
+            name: this.state.tetramer,
+            type: 'bar',
+            mode: 'markers',
+            marker: {
+                symbol: 'square',
+                size: 5,
+                line: {
+                    width: 2
+                }
+            }
+        });
+        let dtick1 = 10; let dtick2 = 10; let dtick3 = 10; let dtick4 = 10; let dtick5 = 10; let dtick6 = 10; let dtick7 = 10; let dtick8 = 10;
         if (max > 200) dtick1 = 50; if (max > 500) dtick1 = 100; if (max > 2000) dtick1 = 500;
         if (max > 5000) dtick1 = 1000; if (max > 20000) dtick1 = 5000; if (max > 50000) dtick1 = 10000;
         if (max2 > 200) dtick2 = 50; if (max2 > 500) dtick2 = 100; if (max2 > 2000) dtick2 = 500;
@@ -216,6 +237,8 @@ class DThree extends Component {
         if (max6 > 5000) dtick6 = 1000; if (max6 > 20000) dtick6 = 5000; if (max6 > 50000) dtick6 = 10000;
         if (max7 > 200) dtick7 = 50; if (max7 > 500) dtick7 = 100; if (max7 > 2000) dtick7 = 500;
         if (max7 > 5000) dtick7 = 1000; if (max7 > 20000) dtick7 = 5000; if (max7 > 50000) dtick7 = 10000;
+        if (max8 > 200) dtick8 = 50; if (max8 > 500) dtick8 = 100; if (max8 > 2000) dtick8 = 500;
+        if (max8 > 5000) dtick8 = 1000; if (max8 > 20000) dtick8 = 5000; if (max8 > 50000) dtick8 = 10000;
       	this.setState({
       	        showPlot: true,
       	        data1: data1,
@@ -447,7 +470,41 @@ class DThree extends Component {
                     title: "number of samples",
                     linewidth: 1
                   }
+                },
+                data8: data8,
+                layout8: {
+                  title: "Base-pair Step Tilt",
+                  width: 1080,
+                  height: 800,
+                  margin: {
+                    b: 150
+                  },
+                  font: {
+                    size: 18
+                  },
+                  xaxis: {
+                    range: [-25, 25],
+                    //autorange: 'reversed',
+                    showgrid: true,
+                    showline: true,
+                    gridwidth: 2,
+                    gridcolor: '#777777',
+                    automargin: true,
+                    title: "tilt value (degrees)",
+                    linewidth: 1
+                  },
+                  yaxis: {
+                    range: [0, max8+5],
+                    showgrid: true,
+                    showline: true,
+                    dtick: dtick8,
+                    gridwidth: 2,
+                    gridcolor: '#777777',
+                    title: "number of samples",
+                    linewidth: 1
+                  }
                 }
+
     	});
 
   }
@@ -721,7 +778,7 @@ class DThree extends Component {
     return (<>
     	<div className="data-window">
     Number of Gaussian samples<input type="number" step="1" value={this.state.numSamples} name="numSamples" onChange={this.inputChanged}/><button disabled={this.state.processing} onClick={this.persistenceLength}>Calculate Persistence Length</button><br/>
-    {this.state.showPlot ? <><Plot layout={this.state.layout1} data={this.state.data1} /><br/><Plot layout={this.state.layout5} data={this.state.data5} /><br/><Plot layout={this.state.layout6} data={this.state.data6} /><br/><Plot layout={this.state.layout2} data={this.state.data2} /><br/><Plot layout={this.state.layout3} data={this.state.data3} /><br/><Plot layout={this.state.layout7} data={this.state.data7} /><br/><Plot layout={this.state.layout4} data={this.state.data4} /><br/></> : null}
+    {this.state.showPlot ? <><Plot layout={this.state.layout1} data={this.state.data1} /><br/><Plot layout={this.state.layout5} data={this.state.data5} /><br/><Plot layout={this.state.layout6} data={this.state.data6} /><br/><Plot layout={this.state.layout2} data={this.state.data2} /><br/><Plot layout={this.state.layout8} data={this.state.data8} /><br/><Plot layout={this.state.layout3} data={this.state.data3} /><br/><Plot layout={this.state.layout7} data={this.state.data7} /><br/><Plot layout={this.state.layout4} data={this.state.data4} /><br/></> : null}
 	<b>Mean state:</b><input type="checkbox" name="showIC" checked={this.state.showIC} onChange={this.inputChanged}/>Show original internal (rad/5) form<table><tbody><tr><td><b>PARAM</b></td><td>rot1 (°)</td><td>rot2 (°)</td><td>rot3 (°)</td><td>trans1 (Å)</td><td>trans2 (Å)</td><td>trans3 (Å)</td></tr>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{(value[0]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0], value[1], value[2]))).toFixed(5)}</td><td>{(value[1]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0], value[1], value[2]))).toFixed(5)}</td><td>{(value[2]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[1], value[2], value[3]))).toFixed(5)}</td><td>{value[3]}</td><td>{(value[4]).toFixed(5)}</td><td>{(value[5]).toFixed(5)}</td></tr>))}</tbody></table>
 	<b>Phosphates:</b><table><thead style={{border: "0 none"}}><tr><td></td><td>xp (Å)</td><td>yp (Å)</td><td>zp (Å)</td></tr></thead><tbody><tr><td>watson</td><td>{this.state.phoW[0].toFixed(5)}</td><td>{this.state.phoW[1].toFixed(5)}</td><td>{this.state.phoW[2].toFixed(5)}</td></tr><tr><td>crick</td><td>{this.state.phoC[0].toFixed(5)}</td><td>{this.state.phoC[1].toFixed(5)}</td><td>{this.state.phoC[2].toFixed(5)}</td></tr></tbody></table>
 	{this.state.eigenvalues.length > 0 ? <><select value={this.state.modeNum} name="modeNum" onChange={this.inputChanged}>

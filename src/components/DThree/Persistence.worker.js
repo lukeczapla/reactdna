@@ -123,6 +123,7 @@ function persistenceLength() {
 	//***start new code (histograms)
     //let watson = [];
     //let crick = [];
+    let binTilt1 = [];
     let binRoll1 = [];
     let binTwist1 = [];
     let binSlide1 = [];
@@ -130,6 +131,7 @@ function persistenceLength() {
     let binCZ = [];
     let binWX = [];
     let binWY = [];
+    binTilt1.length = 100;
     binRoll1.length = 100;
     binTwist1.length = 100;
     binWZ.length = 100;
@@ -140,6 +142,7 @@ function persistenceLength() {
     for (let i = 0; i < 100; i++) {
       binCZ[i] = 0;
       binWZ[i] = 0;
+      binTilt1[i] = 0;
       binRoll1[i] = 0;
       binTwist1[i] = 0;
       if (i < 60) binWY[i] = 0;
@@ -179,6 +182,7 @@ function persistenceLength() {
 	  binX(pw[0], binWX);
 	  binY(pw[1], binWY);
 	  binZ(pc[2], binCZ);
+	  binRoll(stepParameters[1][0], binTilt1);
 	  binRoll(stepParameters[1][1], binRoll1);
 	  binTwist(stepParameters[1][2], binTwist1);
 	  binSlide(stepParameters[1][4], binSlide1);
@@ -196,13 +200,14 @@ function persistenceLength() {
 	let crickBinZ = createBinZ(binCZ);
 	let watsonBinX = createBinX(binWX);
 	let watsonBinY = createBinY(binWY);
+	let BinTilt = createBinRoll(binTilt1);
 	let BinRoll = createBinRoll(binRoll1);
 	let BinTwist = createBinTwist(binTwist1);
 	let BinSlide = createBinSlide(binSlide1);
 	console.log(JSON.stringify(createBinZ(binWZ)));
 	console.log(JSON.stringify(createBinZ(binCZ)));
 	console.log("remainder: " + A[0][3] + " " + A[1][3]);
-	return [A[2][3], watsonBinZ, crickBinZ, BinRoll, BinSlide, watsonBinX, watsonBinY, BinTwist];
+	return [A[2][3], watsonBinZ, crickBinZ, BinRoll, BinSlide, watsonBinX, watsonBinY, BinTwist, BinTilt];
 }
 
 onmessage = (e) => {
