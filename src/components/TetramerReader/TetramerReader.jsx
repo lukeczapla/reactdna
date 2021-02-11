@@ -535,7 +535,7 @@ class TetramerReader extends React.Component {
               <option key={name} value={name}>{name}</option>
             )) : null}
           </select>
-          <input type="text" value={this.state.tetramerText} onChange={this.inputChanged} name="tetramerText" size="4"/>
+          <input type="text" value={this.state.tetramerText} onChange={this.inputChanged} name="tetramerText" size="6"/>
           {this.state.engaged ? <DThree mean={this.state.mean[this.state.tetramer]} cov={this.state.covariance[this.state.tetramer]} tetramer={this.state.tetramer}/> : null}
           {this.state.engaged ? <><br/>Sequence: <input type="text" name="sequence" value={this.state.sequence} onChange={this.inputChanged}/>
     	  <button onClick={this.meanTwist}>Calculate Twist</button>
