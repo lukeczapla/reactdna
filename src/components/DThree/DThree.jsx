@@ -18,7 +18,7 @@ class DThree extends Component {
       showIC: false,
       isDragging: false,
       useScale: true,
-      numSamples: 20000,
+      numSamples: 50000,
       parameters3: [],
       phoW: [0,0,0],
       phoC: [0,0,0],
