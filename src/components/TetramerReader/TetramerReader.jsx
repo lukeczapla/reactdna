@@ -503,7 +503,7 @@ class TetramerReader extends React.Component {
   render() {
     return (<div>
     	  <div className="analyze-data">
-    	  <button onClick={this.clicked}>Collect Data</button>{this.state.analysis[0].length > 0 ? <><input type="checkbox" name="check1" checked={this.state.check1} onChange={this.inputChanged}/>TX-3 <input type="checkbox" name="check2" checked={this.state.check2} onChange={this.inputChanged}/>cgDNA+ <input type="checkbox" name="check3" checked={this.state.check3} onChange={this.inputChanged}/>MD <input type="checkbox" name="check4" checked={this.state.check4} onChange={this.inputChanged}/>TX-2 <select name="plotItem" value={this.state.plotItem} onChange={this.inputChanged}>
+    	  <button onClick={this.clicked}>Collect Data</button>{this.state.analysis[0].length > 0 ? <><table><tbody><td><input type="checkbox" name="check1" checked={this.state.check1} onChange={this.inputChanged}/>TX3 X-ray protein-DNA</td><td><input type="checkbox" name="check2" checked={this.state.check2} onChange={this.inputChanged}/>cgDNA+ 136</td><td><input type="checkbox" name="check3" checked={this.state.check3} onChange={this.inputChanged}/>MD (AMBER parmbsc1) </td><td><input type="checkbox" name="check4" checked={this.state.check4} onChange={this.inputChanged}/>TX2 (alt.) </td></tbody></table><select name="plotItem" value={this.state.plotItem} onChange={this.inputChanged}>
     	  	<option id="twist" value="twist" key="1">Plot Twist</option>
     	  	<option id="px" value="px" key="2">Phosphate xp</option>
     	  	<option id="py" value="py" key="3">Phosphate yp</option>
@@ -524,10 +524,9 @@ class TetramerReader extends React.Component {
     	  </div>
           <br/>{this.state.loaded}<br/><br/>
           <select name="selected" value={this.state.selected} onChange={this.inputChanged}>
-            <option id="1" value="1" key="1">TX3 X-ray</option>
+            <option id="1" value="1" key="1">TX3 X-ray protein-DNA analysis</option>
             <option id="2" value="2" key="2">cgDNA+ 136</option>
-            <option id="3" value="3" key="3">MD</option>
-            <option id="4" value="4" key="4">TX2 X-ray</option>
+            <option id="3" value="3" key="3">MD AMBER parmbsc1</option>
           </select>
           <button onClick={this.loadSet}>Load Dataset</button>
           <select name="tetramer" value={this.state.tetramer} onChange={this.inputChanged}>
