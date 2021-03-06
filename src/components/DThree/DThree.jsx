@@ -450,7 +450,7 @@ class DThree extends Component {
                     size: 18
                   },
                   xaxis: {
-                    range: [15, 55],
+                    range: [10, 60],
                     //autorange: 'reversed',
                     showgrid: true,
                     showline: true,
