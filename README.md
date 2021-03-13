@@ -6,7 +6,7 @@ Using WebGL, it animates the motions of DNA as expressed by eigenvectors of the 
 
 Requires React, three, numeric, plotly.js, and react-plotly.js installed with npm for node, and the input files (30x30 covariance matrices and 1x30 row vector of mean values for dimeric or tetrameric sequences), and the browser should be WebGL enabled for the 3D rendering of movies live in the browser.
 
-Persistence length worker thread requires two packages installed:
+Monte Carlo simulation worker thread (and thread for running all persistence lengths) requires two packages installed:
 ```bash
 npm install react-app-rewired worker-loader --save-dev
 ```
