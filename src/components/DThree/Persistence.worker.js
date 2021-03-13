@@ -62,15 +62,15 @@ function createBinY(bin, crick = false) {
 }
 
 function binTwist(twist, bin) {
-    twist -= 15;
+    twist -= 10;
     twist *= 2.5;
     bin[parseInt(twist)]++;
 }
 
 function createBinTwist(bin) {
   let result = [];
-  for (let i = 0; i < 100; i++) {
-    result.push([i/2.5 + 15 + 0.200, bin[i]]);
+  for (let i = 0; i < 125; i++) {
+    result.push([i/2.5 + 10 + 0.200, bin[i]]);
   }
   return result;
 }
@@ -133,7 +133,7 @@ function persistenceLength() {
     let binWY = [];
     binTilt1.length = 100;
     binRoll1.length = 100;
-    binTwist1.length = 100;
+    binTwist1.length = 125;
     binWZ.length = 100;
     binCZ.length = 100;
     binSlide1.length = 80;
@@ -148,6 +148,9 @@ function persistenceLength() {
       if (i < 60) binWY[i] = 0;
       if (i < 60) binWX[i] = 0;
       if (i < 80) binSlide1[i] = 0;
+    }
+    for (let i = 100; i < 125; i++) {
+      binTwist1[i] = 0;
     }
 	//***end new code
 	for (let i = 0; i < parseInt(data.numSamples); i++) {
