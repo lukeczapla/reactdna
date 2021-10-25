@@ -315,6 +315,16 @@ export function jeigen(a) {
 
 }
 
+export function complementLong(s) {
+    let result = '';
+    for (let i = s.length - 1; i >= 0; i--) {
+        if (s.charAt(i) === 'C') result += 'G';
+        if (s.charAt(i) === 'G') result += 'C';
+        if (s.charAt(i) === 'A') result += 'T';
+        if (s.charAt(i) === 'T') result += 'A';
+    }
+    return result;
+}
 
 export function complement(s, rna = false) {
     let result = "";
@@ -367,7 +377,7 @@ export function complementTetramer(s, rna = false) {
 }
 
 // copy 2D array
-function clone(vec) {
+export function clone(vec) {
 	let result = [];
 	result.length = vec.length;
 	for (let i = 0; i < vec.length; i++) {
@@ -558,21 +568,41 @@ export function scale(t1, t2, t3) {
 	let th = Math.sqrt(t1*t1+t2*t2+t3*t3);
 	let r = Math.PI*th/180.0;
 	let r2 = r/2.0;
-	//console.log(r2/Math.tan(r2));
 	return 2.0*Math.atan(r2)/r;
 }
 
-export function writePDB() {
+let lastAtom = 1;
+let lastRes = 1;
+let chainB = '';
+
+export function setLastAtom(a) {
+    lastAtom = a;
+}
+
+export function setLastRes(a) {
+    lastRes = a;
+}
+
+export function writePDB(forward = false, skip = false, resume = false, autochain = null, size = 146, end = false) {
 	let data = getAtomSets();
 	let letters = data.letters;
 	let line = "ATOM      1  P     A A   1       0.000   0.000   0.000 ";
 	let atom = 1;
+    if (resume) atom = lastAtom;
 	let result = "";
+    let res;
 	//console.log(letters);
 	Object.keys(data.atoms).forEach((key, index) => {
 		//if (index >= 4) return;
 		for (let i = 0; i < data.atoms[key].length; i++) {
-		  let res = index+1;
+          if (forward && skip && index >= 2) {
+              break;
+          }
+          if (forward && !skip && index > 2) {
+              break;
+          }
+          res = index+1;
+          if (resume) res = lastRes + index;
 		  if (index >= 2) res--;
 		  if (index >= 5) res--;
 		  let resname = letters[key].charAt(0);
@@ -582,13 +612,43 @@ export function writePDB() {
 		      res--;
 		    } else resname = letters[index+1].charAt(0);
 		  }
-		  line = "ATOM  " + numN(atom, 5) + "  " + numN2(data.atoms[key][i].name, 3) + "   " + resname + " " + (index < 3 ? "A": "B") + "   " + res + "     " + numN(data.atoms[key][i].x.toFixed(3), 7) + " " + numN(data.atoms[key][i].y.toFixed(3), 7) + " " + numN(data.atoms[key][i].z.toFixed(3), 7) + " ";
+          let chain = 'A';
+          if (index >= 3) chain = "B";
+          if (autochain != null) chain = autochain;
+		  line = "ATOM  " + numN(atom, 5) + "  " + numN2(data.atoms[key][i].name, 3) + "   " + resname + " " + chain + "   " + numN2(res,4) + "  " + numN(data.atoms[key][i].x.toFixed(3), 7) + " " + numN(data.atoms[key][i].y.toFixed(3), 7) + " " + numN(data.atoms[key][i].z.toFixed(3), 7) + " ";
 		  atom++;
-		  result += line + "\n";
+          if (index >= 3 && resume) chainB += line+"\n";
+		  else result += line + "\n";
 		 }
 	});
-	result += "END\n";
-	return result;
+    if (resume) lastAtom = atom;
+    if (resume) lastRes = res;
+	//result += "END\n";
+	if (!end) return result;
+    else return result+chainB;
+}
+
+export function reverse30(v) {
+    let result = JSON.parse(JSON.stringify(v));
+    for (let i = 0; i < 6; i++) {
+        result[24+i] = (i === 0 || i === 3 ? -v[i]: v[i]);
+        //result[18+i] = (i === 0 || i === 3 ? -v[6+i]: v[6+i]);
+        //result[6+i] = (i === 0 || i === 3 ? -v[18+i]: v[18+i]);
+        result[18+i] = v[6+i];  // phosphates seemed symmetric
+        result[6+i] = v[18+i];  // phosphates seemed symmetric
+        result[i] = (i === 0 || i === 3 ? -v[24+i]: v[24+i]);
+        if (i === 0) result[12+i] = -result[12+i];
+        if (i === 3) result[12+i] = -result[15+i];
+    }
+    return result;
+}
+
+export function getA() {
+    return bpstep;
+}
+
+export function setA(value) {
+    bpstep = value;
 }
 
 export function getFrames() {

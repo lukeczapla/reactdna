@@ -9,6 +9,7 @@ import PersistenceAllWorker from './PersistenceAll.worker.js';
 
 class TetramerReader extends React.Component {
 
+
   constructor(props) {
     super(props);
     this.state = {
@@ -26,7 +27,10 @@ class TetramerReader extends React.Component {
       engaged: false,
       layout: null,
       processing: false,
-      data: null
+      data: null,
+      rahul: null,
+      resultField: "",
+      resultField2: ""
     };
   }
 
@@ -53,6 +57,54 @@ class TetramerReader extends React.Component {
   	let currentAnalysisC = [[], [], [], []];
   	let count = 0;
     let count2 = 0;
+    let svalues = [];
+    fetch("1KX5.CURVE.coord").then(r => r.text()).then(text => {
+        let seq = "ATCAATATCCACCTGCAGATACTACCAAAAGTGTATTTGGAAACTGCTCCATCAAAAGGCATGTTCAGCTGGAATCCAGCTGAACATGCCTTTTGATGGAGCAGTTTCCAAATACACTTTTGGTAGTATCTGCAGGTGGATATTGAT";
+        let lines = text.split("\n");
+        lines.forEach(line => {
+            svalues.push(parseFloat(line));
+        });
+        let v30 = svalues.slice(0, 30);
+        let pt = ref.get30Coordinates(v30, "A" + seq.substring(0, 2) + "T", true);
+        ref3.getBasePlanes(ref.getAtomSets());
+        let stepParameters2 = ref3.getParameters();
+        this.state.resultField += stepParameters2[0][3] + " " + stepParameters2[0][4] + " " + stepParameters2[0][5] + " " + stepParameters2[0][0] + " " + stepParameters2[0][1] + " " + stepParameters2[0][2] + " 0 0 0 0 0 0<br/>";
+        this.state.resultField += stepParameters2[2][3] + " " + stepParameters2[2][4] + " " + stepParameters2[2][5] + " " + stepParameters2[2][0] + " " + stepParameters2[2][1] + " " + stepParameters2[2][2] + " " + stepParameters2[1][3] + " " + stepParameters2[1][4] + " " + stepParameters2[1][5] + " " + stepParameters2[1][0] + " " + stepParameters2[1][1] + " " + stepParameters2[1][2] + "<br/>";
+        let chain = ref.writePDB(true, true, true);
+        for (let i = 1; i < 145; i++) {
+            let v30 = svalues.slice(24 * i, 24 * i + 30);
+            let pt = ref.get30Coordinates(v30, "A" + seq.substring(i, i+2) + "T", true, ref.getA());
+            if (i < 144) chain += ref.writePDB(true, true, true);
+            else chain += ref.writePDB(true, false, true);
+            //ref3.getBasePlanes(ref.getAtomSets());
+            //let stepParameters2 = ref3.getParameters();
+            //this.state.resultField += stepParameters2[2][3] + " " + stepParameters2[2][4] + " " + stepParameters2[2][5] + " " + stepParameters2[2][0] + " " + stepParameters2[2][1] + " " + stepParameters2[2][2] + " " + stepParameters2[1][3] + " " + stepParameters2[1][4] + " " + stepParameters2[1][5] + " " + stepParameters2[1][0] + " " + stepParameters2[1][1] + " " + stepParameters2[1][2] + "<br/>";
+        }
+        this.state.resultField2 = chain;
+        ref.setLastAtom(1);
+        ref.setLastRes(1);
+        let Acopy = JSON.parse(JSON.stringify(ref.getA()));
+        Acopy[0][2] = -Acopy[0][2];
+        Acopy[1][2] = -Acopy[1][2];
+        Acopy[2][2] = -Acopy[2][2];
+        Acopy[0][1] = -Acopy[0][1];
+        Acopy[1][1] = -Acopy[1][1];
+        Acopy[2][1] = -Acopy[2][1];
+        ref.setA(Acopy);
+        let seq2 = ref.complementLong(seq);
+        chain = "";
+        for (let i = 144; i >= 0; i--) {
+            let v30 = ref.reverse30(svalues.slice(24 * i, 24 * i + 30));
+            let pt = ref.get30Coordinates(v30, "A" + seq2.substring(i, i+2) + "T", true, ref.getA());
+            if (i > 0) chain += ref.writePDB(true, true, true, 'B');
+            else chain += ref.writePDB(true, false, true, 'B');
+        }
+        this.state.resultField2 += chain;
+
+
+//        console.log("1KX5 3DNA-prime " + stepParameters2[1][3] + " " + stepParameters2[1][4] + " " + stepParameters2[1][5] + " " + stepParameters2[1][0] + " " + stepParameters2[1][1] + " " + stepParameters2[1][2]);
+//        console.log("1KX5 3DNA-prime " + stepParameters2[0][3] + " " + stepParameters2[0][4] + " " + stepParameters2[0][5] + stepParameters2[0][0] + " " + stepParameters2[0][1] + " " + stepParameters2[0][2]);
+    })
   	source.forEach((set, index) => {
   	let dataSet = [];
   	let dataSet2 = [];
@@ -70,6 +122,12 @@ class TetramerReader extends React.Component {
           steps.push(parseFloat(litems[i+1]));
         }
         
+	let v = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 3.4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        let pt = ref.get30Coordinates(v, litems[0], true);
+        ref3.getBasePlanes(ref.getAtomSets());
+        let stepParameters2 = ref3.getParameters();
+        console.log("tilt = " + stepParameters2[1][0] + ", roll = " + stepParameters2[1][1] + ", twist = " + stepParameters2[1][2]);
+
         if (ref.complementTetramer(litems[0]) === litems[0]) sumTwist += steps[14]*11.4591559*ref.scale(steps[12], steps[13], steps[14]);
         else sumTwist += 2*steps[14]*11.4591559*ref.scale(steps[12], steps[13], steps[14]);
         if (ref.complementTetramer(litems[0]) === litems[0]) sumTilt += Math.abs(steps[12])*11.4591559*ref.scale(steps[12], steps[13], steps[14]);
@@ -81,6 +139,8 @@ class TetramerReader extends React.Component {
 	let PhoC = ref.getAtomSets().atoms[4][1];
         ref3.getBasePlanes(ref.getAtomSets());
         let stepParameters = ref3.getParameters();
+
+        
 
         if (ref.complementTetramer(litems[0]) === litems[0]) sumTwist2 += stepParameters[1][2];
         else sumTwist2 += 2*stepParameters[1][2];
@@ -534,6 +594,8 @@ class TetramerReader extends React.Component {
               <option key={name} value={name}>{name}</option>
             )) : null}
           </select>
+            <pre><div dangerouslySetInnerHTML={{__html: this.state.resultField2}}></div></pre>
+
           <input type="text" value={this.state.tetramerText} onChange={this.inputChanged} name="tetramerText" size="6"/>
           {this.state.engaged ? <DThree mean={this.state.mean[this.state.tetramer]} cov={this.state.covariance[this.state.tetramer]} tetramer={this.state.tetramer}/> : null}
           {this.state.engaged ? <><br/>Sequence: <input type="text" name="sequence" value={this.state.sequence} onChange={this.inputChanged}/>

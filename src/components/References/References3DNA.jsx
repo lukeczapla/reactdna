@@ -88,7 +88,6 @@ function parseBases() {
 }
 
 export function calculatetp(A) {
-
     let M = [0,0,0,0,0,0];
     let PI = Math.PI;
 
