@@ -4,6 +4,9 @@ import PersistenceWorker from './Persistence.worker';
 import * as trois from 'three';
 import numeric from 'numeric';
 import Plot from 'react-plotly.js';
+import Table from 'react-bootstrap/Table';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import Eigenvector from './Eigenvector.jsx';
 import * as ref from '../References/References.jsx';
 import * as ref3 from '../References/References3DNA.jsx';
@@ -777,18 +780,18 @@ class DThree extends Component {
     
     return (<>
     	<div className="data-window">
-    Number of Gaussian samples<input type="number" step="1" value={this.state.numSamples} name="numSamples" onChange={this.inputChanged}/><button disabled={this.state.processing} onClick={this.persistenceLength}>Calculate Statistics</button><br/>
+            <center>Number of Gaussian samples<Form.Control style={{textAlign: "center", width: "30%"}} as="input" type="number" step="1" value={this.state.numSamples} name="numSamples" onChange={this.inputChanged}/></center><Button disabled={this.state.processing} onClick={this.persistenceLength}>Calculate Statistics</Button><br/>
     {this.state.showPlot ? <><Plot layout={this.state.layout1} data={this.state.data1} /><br/><Plot layout={this.state.layout5} data={this.state.data5} /><br/><Plot layout={this.state.layout6} data={this.state.data6} /><br/><Plot layout={this.state.layout2} data={this.state.data2} /><br/><Plot layout={this.state.layout8} data={this.state.data8} /><br/><Plot layout={this.state.layout3} data={this.state.data3} /><br/><Plot layout={this.state.layout7} data={this.state.data7} /><br/><Plot layout={this.state.layout4} data={this.state.data4} /><br/></> : null}
-	<b>Mean EPFL/Curves+ state:</b><input type="checkbox" name="showIC" checked={this.state.showIC} onChange={this.inputChanged}/>Show original internal (rad/5) form<table><tbody><tr><td><b>PARAM</b></td><td>rot1 (°)</td><td>rot2 (°)</td><td>rot3 (°)</td><td>trans1 (Å)</td><td>trans2 (Å)</td><td>trans3 (Å)</td></tr>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{(value[0]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0], value[1], value[2]))).toFixed(5)}</td><td>{(value[1]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0], value[1], value[2]))).toFixed(5)}</td><td>{(value[2]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[1], value[2], value[3]))).toFixed(5)}</td><td>{value[3].toFixed(5)}</td><td>{(value[4]).toFixed(5)}</td><td>{(value[5]).toFixed(5)}</td></tr>))}</tbody></table>
-	<b>Phosphates:</b><table><thead style={{border: "0 none"}}><tr><td></td><td>xp (Å)</td><td>yp (Å)</td><td>zp (Å)</td></tr></thead><tbody><tr><td>watson</td><td>{this.state.phoW[0].toFixed(5)}</td><td>{this.state.phoW[1].toFixed(5)}</td><td>{this.state.phoW[2].toFixed(5)}</td></tr><tr><td>crick</td><td>{this.state.phoC[0].toFixed(5)}</td><td>{this.state.phoC[1].toFixed(5)}</td><td>{this.state.phoC[2].toFixed(5)}</td></tr></tbody></table>
-	{this.state.eigenvalues.length > 0 ? <><select value={this.state.modeNum} name="modeNum" onChange={this.inputChanged}>
+            <b>Mean EPFL/Curves+ state:</b><div className="mb-3"><Form.Check inline type="checkbox" name="showIC" checked={this.state.showIC} onChange={this.inputChanged} label="Show original internal (rad/5) form"/></div><Table><thead><tr><td><b>PARAM</b></td><td>rot1 (°)</td><td>rot2 (°)</td><td>rot3 (°)</td><td>trans1 (Å)</td><td>trans2 (Å)</td><td>trans3 (Å)</td></tr></thead><tbody>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{(value[0]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0], value[1], value[2]))).toFixed(5)}</td><td>{(value[1]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0], value[1], value[2]))).toFixed(5)}</td><td>{(value[2]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[1], value[2], value[3]))).toFixed(5)}</td><td>{value[3].toFixed(5)}</td><td>{(value[4]).toFixed(5)}</td><td>{(value[5]).toFixed(5)}</td></tr>))}</tbody></Table>
+	<b>Phosphates:</b><Table><thead style={{border: "0 none"}}><tr><td></td><td>xp (Å)</td><td>yp (Å)</td><td>zp (Å)</td></tr></thead><tbody><tr><td>watson</td><td>{this.state.phoW[0].toFixed(5)}</td><td>{this.state.phoW[1].toFixed(5)}</td><td>{this.state.phoW[2].toFixed(5)}</td></tr><tr><td>crick</td><td>{this.state.phoC[0].toFixed(5)}</td><td>{this.state.phoC[1].toFixed(5)}</td><td>{this.state.phoC[2].toFixed(5)}</td></tr></tbody></Table>
+	{this.state.eigenvalues.length > 0 ? <><Form.Select value={this.state.modeNum} name="modeNum" onChange={this.inputChanged}>
         {this.state.eigenlist.map((value) => (
             <option key={value.value} value={value.index}>{value.index + ": eigenvalue: " + value.value}</option>
-        ))}</select> <input type="checkbox" name="useScale" onChange={this.inputChanged} checked={this.state.useScale}/> Scale by standard deviation<br/>Step Along Eigenvector<input type="number" step="0.1" onChange={this.inputChanged} name="stepBy" value={this.state.stepBy} /></>
+        ))}</Form.Select> <Form.Check inline type="checkbox" name="useScale" onChange={this.inputChanged} checked={this.state.useScale}/> Scale by standard deviation<br/>Step Along Eigenvector<center><Form.Control style={{width: "30%"}} as="input" type="number" step="0.1" onChange={this.inputChanged} name="stepBy" value={this.state.stepBy} /></center></>
         : null}
 	<div style={{border: "solid", margin: "auto", width:"600px", height: "600px", justifyContent: "center", textAlign: "center"}} ref={ref => (this.mount = ref)}></div>
 	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}<br/><br/>
-	  	<b>3DNA state:</b><table><tbody><tr><td><b>PARAM</b></td><td>rot1 (°)</td><td>rot2 (°)</td><td>rot3 (°)</td><td>trans1 (Å)</td><td>trans2 (Å)</td><td>trans3 (Å)</td></tr>{this.state.parameters3.map((value,index) => (<tr><td>{val3titles[index]}</td><td>{value[0].toFixed(5)}</td><td>{value[1].toFixed(5)}</td><td>{value[2].toFixed(5)}</td><td>{value[3].toFixed(5)}</td><td>{value[4].toFixed(5)}</td><td>{value[5].toFixed(5)}</td></tr>))}</tbody></table><br/><br/>
+	  	<b>3DNA state:</b><Table><thead style={{border: "0 none"}}><tr><td><b>PARAM</b></td><td>rot1 (°)</td><td>rot2 (°)</td><td>rot3 (°)</td><td>trans1 (Å)</td><td>trans2 (Å)</td><td>trans3 (Å)</td></tr></thead><tbody>{this.state.parameters3.map((value,index) => (<tr><td>{val3titles[index]}</td><td>{value[0].toFixed(5)}</td><td>{value[1].toFixed(5)}</td><td>{value[2].toFixed(5)}</td><td>{value[3].toFixed(5)}</td><td>{value[4].toFixed(5)}</td><td>{value[5].toFixed(5)}</td></tr>))}</tbody></Table><br/><br/>
 	  <u><b>PDB text file</b></u>
 	  <pre>{this.state.pdbText}</pre><br/>
 	  </div>

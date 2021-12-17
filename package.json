@@ -7,13 +7,16 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "numeric": "^1.2.6",
-    "plotly.js": "^1.58.4",
+    "plotly.js": "^2.8.1",
+    "bootstrap": "5.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-autobind": "^1.0.6",
+    "react-bootstrap": "^2.0.3",
     "react-hooks-worker": "^1.0.0",
     "react-plotly.js": "^2.5.1",
     "react-scripts": "4.0.1",
-    "three": "^0.123.0",
+    "three": "^0.135.0",
     "web-vitals": "^0.2.4"
   },
   "scripts": {

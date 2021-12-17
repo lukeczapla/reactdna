@@ -1,4 +1,4 @@
-
+import Table from 'react-bootstrap/Table';
 import {Component} from 'react';
 
 class Eigenvector extends Component {
@@ -17,7 +17,7 @@ class Eigenvector extends Component {
         }
 		return (
 		<><b>Eigenvector (linear combination, norm = 1)</b>
-		<table style={{margin:"auto"}}><tbody>
+		<Table striped bordered><tbody>
 		<tr>
 		<td>Pair 1</td>
 		{values.pair1.map((element) => (<td key={element}>{element.toFixed(7)}</td>))}
@@ -34,7 +34,7 @@ class Eigenvector extends Component {
         	<td>Pair 2</td>
         	{values.pair2.map((element) => (<td key={element}>{element.toFixed(7)}</td>))}
 		</tr>
-		</tbody></table></>
+		</tbody></Table></>
 		);
 
 	}

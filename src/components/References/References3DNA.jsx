@@ -200,9 +200,9 @@ export function calculateM(tp) {
     M[2][1] = sg*sp;
     M[2][2] = cg;
 
-	M[0][3] = 0.0;
-	M[1][3] = 0.0;
-	M[2][3] = 0.0;
+//	M[0][3] = 0.0;
+//	M[1][3] = 0.0;
+//	M[2][3] = 0.0;
 
     sp = Math.sin(phi); cp = Math.cos(phi); sg = Math.sin(gamma/2.0); cg = Math.cos(gamma/2.0);
 
@@ -609,3 +609,4 @@ function midFrameTest(P, A1, A2) {
 	return [xp, yp, zp];
 }
 
+console.log(calculatetp(calculateA([145, 150, 175, 10, 10, 10])));

@@ -20,7 +20,7 @@ function createBinZ(bin) {
 }
 
 function binX(px, bin, crick = false) {
-  if (px > -1.5) console.log("significant watson px (Å) = " + px);
+  //if (px > -1.5) console.log("significant watson px (Å) = " + px);
   if (!crick) {
     px += 6.0;
     px *= 10;
@@ -90,7 +90,7 @@ function createBinRoll(bin) {
 }
 
 function binSlide(slide, bin) {
-    if (slide < -2.0) console.log("SLIDE: " + slide);
+    //if (slide < -2.0) console.log("SLIDE: " + slide);
     slide += 4;
     slide *= 10;
     bin[parseInt(slide)]++;

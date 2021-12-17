@@ -4,6 +4,7 @@ import * as ref from '../References/References.jsx';
 let data = [];
 
 function persistenceLengthAll() {
+	console.log("Doing ALL Persistence Lengths");
     let result = [];
 	let sum = 0.0;
   	Object.keys(data.mean).forEach((value, index) => {

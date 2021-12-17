@@ -398,9 +398,8 @@ export function get30Coordinates(ic, step, saveState = false, Ai = null) {
 	if (saveState) frames = [];
 	
 	
-	// first base pair
+	// first base pair bases are watson and crick
     let bfra = calculateFrame(ic.slice(0, 6));
-   // if (saveState) console.log(JSON.stringify(bfra));
 
     bfra[0][3] = -ic[3] / 2.0;
     bfra[1][3] = -ic[4] / 2.0;
@@ -409,7 +408,6 @@ export function get30Coordinates(ic, step, saveState = false, Ai = null) {
     for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
       bfra[i][j] = Qhalf[i][j];
     }
-    // bfra is now in the middle
 
     let crick = numeric.dot(A, bfra)
     let watson = numeric.dot(crick, calculateFrame(ic.slice(0, 6)));
