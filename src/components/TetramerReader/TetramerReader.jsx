@@ -24,8 +24,8 @@ class TetramerReader extends React.Component {
       loaded: "",
       analyzed: false,
       tetramerText: "",
-      selected: "1",
-      tetramer: "",
+      selectedItem: "1",
+      tetramer: "ATAT",
       mean: {},
       covariance: {},
       items: [],
@@ -63,8 +63,7 @@ class TetramerReader extends React.Component {
   		["mean_TX3_3S_C1_cg_136.txt", "cov_TX3_3S_C1_cg_136.txt"],
   		["mean_cgDNA_136.txt", "cov_cgDNA_136.txt"],
   		["MD_mean_bstj_cgf_136.txt", "MD_cov_bstj_cgf_136.txt"],
-  		["means_internal.txt", "cov_internal.txt"],
-        ["means-XNE-EV2.txt", "cov-XNE-EV2.txt"]
+  		["means_internal.txt", "cov_internal.txt"]
   	];
   	let currentAnalysis = [[], [], [], []];
   	let currentAnalysisC = [[], [], [], []];
@@ -345,19 +344,20 @@ class TetramerReader extends React.Component {
     	
     }
     if (e.target.name === "tetramer") this.engage();
-    if (e.target.name === "selected") {
-        this.loadSet(value);
+    if (e.target.name === "selectedItem") {
+        this.loadSet(null, value);
     }
   };
 
-  loadSet = (value = null) => {
+  loadSet = (q, value = null) => {
     let f1 = "", f2 = "";
     let itemsT = [];
     let covarianceT = {};
     let meanT = {};
     let field = 'unknown';
-    if (value == null) value = this.state.selected;
-    if (this.state.tetramer === "") this.setState({tetramer:"ATAT"});
+    if (value == null) value = this.state.selectedItem;
+    console.log(value);
+    //if (this.state.tetramer === "") this.setState({tetramer:"ATAT"});
     if (parseInt(value) === 1) {
       f1 = process.env.PUBLIC_URL+"mean_TX3_3S_C1_cg_136.txt";
       f2 = process.env.PUBLIC_URL+"cov_TX3_3S_C1_cg_136.txt";
@@ -378,11 +378,11 @@ class TetramerReader extends React.Component {
       f2 = process.env.PUBLIC_URL+"cov_internal.txt";
 	  field = "X-ray/NMR/CryoEM analysis of protein-DNA structures";
     }
-    if (parseInt(value) === 5) {
+    /*if (parseInt(value) === 5) {
         f1 = process.env.PUBLIC_URL+"means-XNE-EV2.txt";
         f2 = process.env.PUBLIC_URL+"cov-XNE-EV2.txt";
         field = "X-ray/NMR/CryoEM EV/EV analysis of protein-DNA structures";
-    }
+    }*/
     fetch(f1).then((r) => r.text()).then(text => {
       let lines = text.split("\n");
       lines.forEach(line => {
@@ -705,7 +705,7 @@ class TetramerReader extends React.Component {
   render() {
     return (<div>
     	  <div className="analyze-data">
-    	  <Button hidden={this.state.analyzed} onClick={this.clicked}>Collect Data</Button>{this.state.analysis[0].length > 0 ?
+    	  <Button hidden={this.state.analyzed} onClick={this.clicked}>Load Graph Data</Button>{this.state.analysis[0].length > 0 ?
               <><Table striped bordered><thead></thead><tbody><tr>
                   <td><input type="checkbox" name="check1" checked={this.state.check1} onChange={this.inputChanged}/>TX3 X-ray protein-DNA</td>
                   <td><input type="checkbox" name="check2" checked={this.state.check2} onChange={this.inputChanged}/>cgDNA+ 136</td>
@@ -729,15 +729,15 @@ class TetramerReader extends React.Component {
 		    <option id="S" value="S" key="13">S (config. volume)</option>
     	  	<option id="persistence" value="persistence" key="persistence">Persistence Length</option>
     	  </Form.Select><Button onClick={this.makePlot}>Create Plot!</Button></> : null}
-    	  {this.state.layout ? <Plot layout={this.state.layout} data={this.state.data} /> : null} <Button onClick={this.clearData}>Clear Data and Plots</Button>
+    	  {this.state.layout ? <center><Plot layout={this.state.layout} data={this.state.data} /></center> : null} <Button onClick={this.clearData}>Clear Data and Plots</Button>
     	  <br/>
     	  </div>
           <br/>{this.state.loaded}<br/><br/>
-          <Form.Select name="selected" value={this.state.selected} onChange={this.inputChanged}>
-            <option id="1" value={1} key="1">TX3 X-ray protein-DNA analysis</option>
-            <option id="2" value={2} key="2">cgDNA+ 136</option>
-            <option id="3" value={3} key="3">MD AMBER parmbsc1</option>
-            <option id="4" value={4} key="4">X-ray/NMR/CryoEM protein-DNA</option>
+          <Form.Select name="selectedItem" value={this.state.selectedItem} onChange={this.inputChanged}>
+            <option id="1" value="1" key="1">TX3 X-ray protein-DNA analysis</option>
+            <option id="2" value="2" key="2">cgDNA+ 136</option>
+            <option id="3" value="3" key="3">MD AMBER parmbsc1</option>
+            <option id="4" value="4" key="4">X-ray/NMR/CryoEM protein-DNA</option>
             {/*<option id="5" value={5} key="5">X-ray/NMR/CryoEM EV^2 protein-DNA</option>*/}
           </Form.Select>
           {!this.state.engaged && <Button onClick={this.loadSet}>Load Dataset</Button>}
@@ -749,7 +749,6 @@ class TetramerReader extends React.Component {
         {/*<pre><div dangerouslySetInnerHTML={{__html: this.state.resultField}}></div></pre>
           <pre><div dangerouslySetInnerHTML={{__html: this.state.resultField2}}></div></pre>*/}
           {this.state.engaged && <SearchBar autoFocus count={this.clearSearch} shouldRenderClearButton={true} shouldRenderSearchButton={false} placeholder="type tetramer" suggestions={this.state.suggestions} onClear={this.handleClear} onSearch={this.handleSearch} onChange={this.handleChange} styles={styles} />}
-
         {/*<input type="text" value={this.state.tetramerText} onChange={this.inputChanged} name="tetramerText" size="6"/>*/}
           {this.state.engaged ? <DThree mean={this.state.mean[this.state.tetramer]} cov={this.state.covariance[this.state.tetramer]} tetramer={this.state.tetramer}/> : null}
           {this.state.engaged ? <><br/>Sequence: <input type="text" name="sequence" value={this.state.sequence} onChange={this.inputChanged}/>
