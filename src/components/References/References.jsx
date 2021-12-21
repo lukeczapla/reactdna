@@ -5,7 +5,7 @@ let Qhalf = numeric.identity(4);
 let bseq = [];
 let bvalues = [];
 let frames = [];
-let bpstep = [];
+let bpstep = numeric.identity(4);
 
 export const bases = [
         "SEQRES   1 A    1  A\n" +
@@ -113,10 +113,12 @@ export function parseBases() {
   return result;
 }
 
+/*
 export const phoRot = [[0.28880532, -0.40811277, -0.8659639, 0.0],
                        [-0.50008344, 0.70707284, -0.50010651, 0.0],
                        [0.81639941, 0.57748763, 0.0, 0.0],
                        [0.0, 0.0, 0.0, 1.0]];
+ */
 
 function calculateFrame(ic, isphosphate = false) {
   let uscale = 5.0;
@@ -392,6 +394,8 @@ export function clone(vec) {
 
 export function get30Coordinates(ic, step, saveState = false, Ai = null) {
 
+    //console.log(step);
+
 	let A = numeric.identity(4);
     if (Ai !== null) A = Ai;
 
@@ -581,6 +585,81 @@ export function setLastRes(a) {
     lastRes = a;
 }
 
+export function writePDBFull(data, sequence, size) {
+    //let atom = 1;
+    bpstep = numeric.identity(4);
+    let sizes = {"A": 11, "G": 12, "T": 10, "C": 9};
+    let sequence2 = complementLong(sequence);
+    let p2 = 0;
+    for (let i = sequence2.length-1; i >= 2; i--) p2 += sizes[sequence2[i]];
+    p2 += 5*(size-2);
+    //get30Coordinates(data.slice(0, 30), sequence.slice(0,2), true, numeric.identity(4));
+    let pos = 0;
+    let p1 = 1;
+    let resnum2 = size;
+    let vresult2 = "";
+    let result = "";
+    let resnum;
+    let anum1 = 1;
+    do {
+        //console.log(pos);
+        get30Coordinates(data.slice(24*pos, 24*pos+30), 'A' + sequence.slice(pos,pos+2) + 'A', true, getA());
+        let d = getAtomSets();
+        let anum2 = p2;
+        let result2 = "";
+        Object.keys(d.atoms).forEach((key, index) => { // letters = [strW1, "pho", strW2, strC2, "pho", strC1]
+            for (let i = 0; i < d.atoms[key].length; i++) {
+                if (index >= 0 && index <= 2) {
+                    let resname = d.letters[key].charAt(0);
+                    if (index === 0) resnum = p1;
+                    if (index === 2) resnum = p1+1;
+                    if (index === 1) {
+                        if (d.atoms[key][i].name === "O3'") {
+                            resname = d.letters[''+(index-1)]
+                            resnum = p1;
+                        }
+                        else {
+                            resname = d.letters[''+(index+1)];
+                            resnum = p1+1;
+                        }
+                    }
+                    if (index !== 2 || pos === size-2) {
+                        let line = "ATOM  " + numN(anum1++, 5) + "  " + numN2(d.atoms[key][i].name, 3) + "   " + resname + " " + "X" + "   " + numN2(resnum, 4) + "  " + numN(d.atoms[key][i].x.toFixed(3), 7) + " " + numN(d.atoms[key][i].y.toFixed(3), 7) + " " + numN(d.atoms[key][i].z.toFixed(3), 7) + " ";
+                        result += line + "\n";
+                    }
+                } else {  // index > 2
+                    let resname = d.letters[key].charAt(0);
+                    if (index === 3) resnum = resnum2-1;
+                    if (index === 5) resnum = resnum2;
+                    if (index === 4) {
+                        if (d.atoms[key][i].name === "O3'") {
+                            resname = d.letters[''+(index-1)]
+                            resnum = resnum2-1;
+                        }
+                        else {
+                            resname = d.letters[''+(index+1)]
+                            resnum = resnum2;
+                        }
+                    }
+                    if (index !== 3 || pos === size-2) {
+                        let line = "ATOM  " + numN(anum2++, 5) + "  " + numN2(d.atoms[key][i].name, 3) + "   " + resname + " " + "Y" + "   " + numN2(resnum, 4) + "  " + numN(d.atoms[key][i].x.toFixed(3), 7) + " " + numN(d.atoms[key][i].y.toFixed(3), 7) + " " + numN(d.atoms[key][i].z.toFixed(3), 7) + " ";
+                        result2 += line + "\n";
+                    }
+                }
+            }
+
+        });
+        vresult2 = result2 + vresult2;  // prepended as whole entities
+        if (pos === 0) p2 -= (sizes[sequence2[pos]] + 4);
+        else p2 -= (sizes[sequence2[pos]]+5);
+
+        pos++;
+        resnum2--;
+        p1++;
+    } while (pos < size-1);
+    return result + vresult2;
+}
+
 export function writePDB(forward = false, skip = false, resume = false, autochain = null, size = 146, end = false) {
 	let data = getAtomSets();
 	let letters = data.letters;
@@ -590,7 +669,7 @@ export function writePDB(forward = false, skip = false, resume = false, autochai
 	let result = "";
     let res;
 	//console.log(letters);
-	Object.keys(data.atoms).forEach((key, index) => {
+	Object.keys(data.atoms).forEach((key, index) => {  // bletters = [strW1, "pho", strW2, strC2, "pho", strC1]
 		//if (index >= 4) return;
 		for (let i = 0; i < data.atoms[key].length; i++) {
           if (forward && skip && index >= 2) {

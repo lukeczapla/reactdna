@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.1.10",
     "numeric": "^1.2.6",
     "plotly.js": "^2.8.1",
+    "3dmol": "1.7.1",
     "bootstrap": "5.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

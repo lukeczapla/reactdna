@@ -585,7 +585,7 @@ export function getParameters() {
 	return [pairingParameters1, stepParameters, pairingParameters2];
 }
 
-
+// another test
 function testSuperposition() {
 	let points = [[0, 0, 0], [2,0,0], [0,2,0]];
 	let ref = [[0, 0, 2], [0, 2, 2], [2,0,2]];
@@ -593,6 +593,7 @@ function testSuperposition() {
 	return(superposition(points, ref));
 }
 
+// just to calculate the middle frame and get the phosphate coordinates expressed in basis vectors
 function midFrameTest(P, A1, A2) {
 	let A = numeric.dot(numeric.inv(A1), A2);
 	let steps = calculatetp(A);
@@ -608,5 +609,3 @@ function midFrameTest(P, A1, A2) {
 
 	return [xp, yp, zp];
 }
-
-console.log(calculatetp(calculateA([145, 150, 175, 10, 10, 10])));

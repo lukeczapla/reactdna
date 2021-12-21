@@ -2,9 +2,9 @@ import React from 'react';
 import DThree from '../DThree/DThree.jsx';
 import * as ref from '../References/References.jsx';
 import * as ref3 from '../References/References3DNA.jsx';
+import PDBDrawer from '../PDBDrawer/PDBDrawer.js';
 import Plot from 'react-plotly.js';
 import Form from 'react-bootstrap/Form'
-import InputGroup from 'react-bootstrap/InputGroup';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import SearchBar from '../SearchBar.js';
@@ -12,7 +12,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './SearchBar.module.css';
 
 import "./TetramerReader.css";
-import numeric from 'numeric';
 import PersistenceAllWorker from './PersistenceAll.worker.js';
 
 class TetramerReader extends React.Component {
@@ -71,63 +70,6 @@ class TetramerReader extends React.Component {
     let count2 = 0;
     let svalues = [];
     this.setState({analyzed: true});
-    /*fetch("1TGH.CURVE.coord").then(r => r.text()).then(text => {
-        let seq = "ATCAATATCCACCTGCAGATACTACCAAAAGTGTATTTGGAAACTGCTCCATCAAAAGGCATGTTCAGCTGGAATCCAGCTGAACATGCCTTTTGATGGAGCAGTTTCCAAATACACTTTTGGTAGTATCTGCAGGTGGATATTGAT";
-        let lines = text.split("\n");
-        lines.forEach(line => {
-            svalues.push(parseFloat(line));
-        });
-        let v30 = svalues.slice(0, 30);
-        let pt = ref.get30Coordinates(v30, "A" + seq.substring(0, 2) + "T", true);
-        ref3.getBasePlanes(ref.getAtomSets());
-        let stepParameters2 = ref3.getParameters();
-        this.state.resultField += stepParameters2[0][0] + " " + stepParameters2[0][1] + " " + stepParameters2[0][2] + " " + stepParameters2[0][3] + " " + stepParameters2[0][4] + " " + stepParameters2[0][5] + " 0 0 0 0 0 0<br/>";
-        this.state.resultField += stepParameters2[2][0] + " " + stepParameters2[2][1] + " " + stepParameters2[2][2] + " " + stepParameters2[2][3] + " " + stepParameters2[2][4] + " " + stepParameters2[2][5] + " " + stepParameters2[1][0] + " " + stepParameters2[1][1] + " " + stepParameters2[1][2] + " " + stepParameters2[1][3] + " " + stepParameters2[1][4] + " " + stepParameters2[1][5] + "<br/>";
-        this.state.resultField2 += (v30[0]*11.4591559*ref.scale(v30[0], v30[1], v30[2])) + " " + (v30[1]*11.4591559*ref.scale(v30[0], v30[1], v30[2])) + " " + (v30[2]*11.4591559*ref.scale(v30[0], v30[1], v30[2])) + " " + v30[3] + " " + v30[4] + " " + v30[5] + " " + "0.0 0.0 0.0 0.0 0.0 0.0" + "<br/>";
-        this.state.resultField2 += (v30[24]*11.4591559*ref.scale(v30[24], v30[25], v30[26])) + " " + (v30[25]*11.4591559*ref.scale(v30[24], v30[25], v30[26])) + " " + (v30[26]*11.4591559*ref.scale(v30[25], v30[26], v30[7])) + " " + v30[27] + " " + v30[28] + " " + v30[29] + " " + (v30[12]*11.4591559*ref.scale(v30[12], v30[13], v30[14])) + " " + (v30[13]*11.4591559*ref.scale(v30[12], v30[13], v30[14])) + " " + (v30[14]*11.4591559*ref.scale(v30[12], v30[13], v30[14])) + " " + v30[15] + " " + v30[16] + " " + v30[17] + "<br/>";
-
-        let chain = ref.writePDB(true, true, true);
-        for (let i = 1; i < 12; i++) {
-            v30 = svalues.slice(24 * i, 24 * i + 30);
-
-            pt = ref.get30Coordinates(v30, "A" + seq.substring(0, 2) + "T", true);
-            ref3.getBasePlanes(ref.getAtomSets());
-            stepParameters2 = ref3.getParameters();
-            this.state.resultField += stepParameters2[2][0] + " " + stepParameters2[2][1] + " " + stepParameters2[2][2] + " " + stepParameters2[2][3] + " " + stepParameters2[2][4] + " " + stepParameters2[2][5] + " " + stepParameters2[1][0] + " " + stepParameters2[1][1] + " " + stepParameters2[1][2] + " " + stepParameters2[1][3] + " " + stepParameters2[1][4] + " " + stepParameters2[1][5] + "<br/>";
-            this.state.resultField2 += (v30[24]*11.4591559*ref.scale(v30[24], v30[25], v30[26])) + " " + (v30[25]*11.4591559*ref.scale(v30[24], v30[25], v30[26])) + " " + (v30[26]*11.4591559*ref.scale(v30[25], v30[26], v30[7])) + " " + v30[27] + " " + v30[28] + " " + v30[29] + " " + (v30[12]*11.4591559*ref.scale(v30[12], v30[13], v30[14])) + " " + (v30[13]*11.4591559*ref.scale(v30[12], v30[13], v30[14])) + " " + (v30[14]*11.4591559*ref.scale(v30[12], v30[13], v30[14])) + " " + v30[15] + " " + v30[16] + " " + v30[17] +  "<br/>";
-
-            //let pt = ref.get30Coordinates(v30, "A" + seq.substring(i, i+2) + "T", true, ref.getA());
-            //if (i < 144) chain += ref.writePDB(true, true, true);
-            //else chain += ref.writePDB(true, false, true);
-            //ref3.getBasePlanes(ref.getAtomSets());
-            //let stepParameters2 = ref3.getParameters();
-            //this.state.resultField += stepParameters2[2][3] + " " + stepParameters2[2][4] + " " + stepParameters2[2][5] + " " + stepParameters2[2][0] + " " + stepParameters2[2][1] + " " + stepParameters2[2][2] + " " + stepParameters2[1][3] + " " + stepParameters2[1][4] + " " + stepParameters2[1][5] + " " + stepParameters2[1][0] + " " + stepParameters2[1][1] + " " + stepParameters2[1][2] + "<br/>";
-        }
-        //this.state.resultField2 = resultField2;
-        ref.setLastAtom(1);
-        ref.setLastRes(1);
-        let Acopy = JSON.parse(JSON.stringify(ref.getA()));
-        Acopy[0][2] = -Acopy[0][2];
-        Acopy[1][2] = -Acopy[1][2];
-        Acopy[2][2] = -Acopy[2][2];
-        Acopy[0][1] = -Acopy[0][1];
-        Acopy[1][1] = -Acopy[1][1];
-        Acopy[2][1] = -Acopy[2][1];
-        ref.setA(Acopy);
-        let seq2 = ref.complementLong(seq);
-        chain = "";
-        for (let i = 144; i >= 0; i--) {
-            let v30 = ref.reverse30(svalues.slice(24 * i, 24 * i + 30));
-            let pt = ref.get30Coordinates(v30, "A" + seq2.substring(i, i+2) + "T", true, ref.getA());
-            if (i > 0) chain += ref.writePDB(true, true, true, 'B');
-            else chain += ref.writePDB(true, false, true, 'B');
-        }
-        this.state.resultField2 += chain;
-
-
-//        console.log("1KX5 3DNA-prime " + stepParameters2[1][3] + " " + stepParameters2[1][4] + " " + stepParameters2[1][5] + " " + stepParameters2[1][0] + " " + stepParameters2[1][1] + " " + stepParameters2[1][2]);
-//        console.log("1KX5 3DNA-prime " + stepParameters2[0][3] + " " + stepParameters2[0][4] + " " + stepParameters2[0][5] + stepParameters2[0][0] + " " + stepParameters2[0][1] + " " + stepParameters2[0][2]);
-    });*/
   	source.forEach((set, index) => {
   	let dataSet = [];
   	let dataSet2 = [];
@@ -485,22 +427,22 @@ class TetramerReader extends React.Component {
   					yvalues.push(value[9]);
   					if (value[9] > max) max = value[9];
   					if (value[9] < min) min = value[9];
-					xvalues.push(value[0]);
-					yvalues.push(value[11]);
+					//xvalues.push(value[0]);
+					//yvalues.push(value[11]);
   				}
   				else if (this.state.plotItem === "roll") {
   					yvalues.push(value[10]);
   					if (value[10] > max) max = value[10];
   					if (value[10] < min) min = value[10];
-  					xvalues.push(value[0]);
-					yvalues.push(value[12]);
+  					//xvalues.push(value[0]);
+					//yvalues.push(value[12]);
 				}
   				else if (this.state.plotItem === "twist") {
   					yvalues.push(value[1]);
   					if (value[1] > max) max = value[1];
   					if (value[1] < min) min = value[1];
-  					xvalues.push(value[0]);
-  					yvalues.push(value[8]);
+  					//xvalues.push(value[0]);
+  					//yvalues.push(value[8]);
   					if (Math.abs(value[8]-value[1]) > max_diff) max_diff = Math.abs(value[8] - value[1]);
   				}
                                 else if (this.state.plotItem === "shift") {
@@ -574,6 +516,7 @@ class TetramerReader extends React.Component {
   	this.setState({data: data,
             layout: {
               title: "Comparison of Data Sets",
+              colorway: ['#0000CC', '#FF0000', '#00AA00', '#FF00FF'],
               width: 1080,
               height: 800,
               margin: {
@@ -706,7 +649,7 @@ class TetramerReader extends React.Component {
     return (<div>
     	  <div className="analyze-data">
     	  <Button hidden={this.state.analyzed} onClick={this.clicked}>Load Graph Data</Button>{this.state.analysis[0].length > 0 ?
-              <><Table striped bordered><thead></thead><tbody><tr>
+              <><center><b>Select one or more models before making plots</b></center><Table striped bordered><thead></thead><tbody><tr>
                   <td><input type="checkbox" name="check1" checked={this.state.check1} onChange={this.inputChanged}/>TX3 X-ray protein-DNA</td>
                   <td><input type="checkbox" name="check2" checked={this.state.check2} onChange={this.inputChanged}/>cgDNA+ 136</td>
                   <td><input type="checkbox" name="check3" checked={this.state.check3} onChange={this.inputChanged}/>MD (AMBER parmbsc1) </td>
@@ -746,15 +689,15 @@ class TetramerReader extends React.Component {
               <option key={name} value={name}>{name}</option>
             )) : null}
           </Form.Select>}
-        {/*<pre><div dangerouslySetInnerHTML={{__html: this.state.resultField}}></div></pre>
-          <pre><div dangerouslySetInnerHTML={{__html: this.state.resultField2}}></div></pre>*/}
           {this.state.engaged && <SearchBar autoFocus count={this.clearSearch} shouldRenderClearButton={true} shouldRenderSearchButton={false} placeholder="type tetramer" suggestions={this.state.suggestions} onClear={this.handleClear} onSearch={this.handleSearch} onChange={this.handleChange} styles={styles} />}
-        {/*<input type="text" value={this.state.tetramerText} onChange={this.inputChanged} name="tetramerText" size="6"/>*/}
           {this.state.engaged ? <DThree mean={this.state.mean[this.state.tetramer]} cov={this.state.covariance[this.state.tetramer]} tetramer={this.state.tetramer}/> : null}
           {this.state.engaged ? <><br/>Sequence: <input type="text" name="sequence" value={this.state.sequence} onChange={this.inputChanged}/>
     	  <Button onClick={this.meanTwist}>Calculate Twist of DNA chain</Button>
     	  <br/><Button disabled={this.state.processing} onClick={this.persistenceAll}>All Persistence Lengths</Button>
+          <br/>
     	  <div id="resultPersistence"></div></> : null}
+            <hr/>
+          <PDBDrawer></PDBDrawer>
           </div>
         )
   }

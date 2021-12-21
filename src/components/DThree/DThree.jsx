@@ -247,6 +247,7 @@ class DThree extends Component {
       	        data1: data1,
                 layout1: {
                   title: "zp values of Watson Phosphate",
+                  colorway: ['#FF0000', '#0000FF', '#00AA00', '#FF00FF'],
                   width: 1080,
                   height: 800,
                   margin: {
@@ -280,6 +281,7 @@ class DThree extends Component {
     			data2: data2,
                 layout2: {
                   title: "zp values of Crick Phosphate",
+                  colorway: ['#0000FF', '#FF0000', '#00AA00', '#FF00FF'],
                   width: 1080,
                   height: 800,
                   margin: {
@@ -314,6 +316,7 @@ class DThree extends Component {
                 data3: data3,
                 layout3: {
                   title: "Base-pair Step Roll",
+                  colorway: ['#0000FF', '#FF0000', '#00AA00', '#FF00FF'],
                   width: 1080,
                   height: 800,
                   margin: {
@@ -346,6 +349,7 @@ class DThree extends Component {
                 data4: data4,
                 layout4: {
                   title: "Base-pair Step Slide",
+                  colorway: ['#0000FF', '#FF0000', '#00AA00', '#FF00FF'],
                   width: 1080,
                   height: 800,
                   margin: {
@@ -378,6 +382,7 @@ class DThree extends Component {
                 data5: data5,
                 layout5: {
                   title: "xp values of Watson phosphate",
+                  colorway: ['#0000FF', '#FF0000', '#00AA00', '#FF00FF'],
                   width: 1080,
                   height: 800,
                   margin: {
@@ -411,6 +416,7 @@ class DThree extends Component {
                 data6: data6,
                 layout6: {
                   title: "yp values of Watson phosphate",
+                  colorway: ['#0000FF', '#FF0000', '#00AA00', '#FF00FF'],
                   width: 1080,
                   height: 800,
                   margin: {
@@ -444,6 +450,7 @@ class DThree extends Component {
                 data7: data7,
                 layout7: {
                   title: "Base-pair Step Twist",
+                  colorway: ['#0000FF', '#FF0000', '#00AA00', '#FF00FF'],
                   width: 1080,
                   height: 800,
                   margin: {
@@ -477,6 +484,7 @@ class DThree extends Component {
                 data8: data8,
                 layout8: {
                   title: "Base-pair Step Tilt",
+                  colorway: ['#0000FF', '#FF0000', '#00AA00', '#FF00FF'],
                   width: 1080,
                   height: 800,
                   margin: {
@@ -787,7 +795,7 @@ class DThree extends Component {
 	{this.state.eigenvalues.length > 0 ? <><Form.Select value={this.state.modeNum} name="modeNum" onChange={this.inputChanged}>
         {this.state.eigenlist.map((value) => (
             <option key={value.value} value={value.index}>{value.index + ": eigenvalue: " + value.value}</option>
-        ))}</Form.Select> <Form.Check inline type="checkbox" name="useScale" onChange={this.inputChanged} checked={this.state.useScale}/> Scale by standard deviation<br/>Step Along Eigenvector<center><Form.Control style={{width: "30%"}} as="input" type="number" step="0.1" onChange={this.inputChanged} name="stepBy" value={this.state.stepBy} /></center></>
+        ))}</Form.Select> <Form.Check inline type="checkbox" name="useScale" onChange={this.inputChanged} checked={this.state.useScale} label="Scale by standard deviation"/><br/>Step Along Eigenvector<center><Form.Control style={{width: "30%"}} as="input" type="number" step="0.1" onChange={this.inputChanged} name="stepBy" value={this.state.stepBy} /></center></>
         : null}
 	<div style={{border: "solid", margin: "auto", width:"600px", height: "600px", justifyContent: "center", textAlign: "center"}} ref={ref => (this.mount = ref)}></div>
 	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}<br/><br/>
